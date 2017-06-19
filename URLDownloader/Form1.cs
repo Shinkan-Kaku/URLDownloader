@@ -101,7 +101,7 @@ namespace URLDownloader
         }
         private void updateProgress(object sender, ProgressChangedEventArgs e)
         {
-            //typeMessageToTtBox(Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
+            typeMessageToTtBox(Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
             progressBar1.Value = e.ProgressPercentage;
         }
         private void BgWReportProgress(object sender, DoWorkEventArgs e)
