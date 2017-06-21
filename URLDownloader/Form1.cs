@@ -21,6 +21,7 @@ namespace URLDownloader
         UDdler Udler;
         //Thread dlListner;
         Thread FBChoiceListner;
+        Thread Uldlworker;
         BackgroundWorker background;
         //private BackgroundWorker backgroundworker;
         bool timetoClose;
@@ -30,8 +31,14 @@ namespace URLDownloader
             Udler = new UDdler();
             timetoClose = false;
             FBChoiceListner = new Thread(threadcheckingFBCChoiced);
+            Uldlworker = new Thread(threadingDownloadWork);
             FBChoiceListner.Start();
+            Uldlworker.Start();
             background = new BackgroundWorker();
+            background.DoWork += BgWReportProgress;
+            background.ProgressChanged += updateProgress;
+            background.RunWorkerCompleted += ProgressComplete;
+            background.WorkerReportsProgress = true;
             typeMessageToTtBox("Welcome");
         }
 
@@ -54,7 +61,6 @@ namespace URLDownloader
             Console.WriteLine(SavingURL);
            
             
-            //wc.DownloadFile("http://blog.darkthread.net/images/darkthreadbanner.gif","b:\\darkthread.gif");
         }
 
         private void eventLog1_EntryWritten(object sender, System.Diagnostics.EntryWrittenEventArgs e)
@@ -85,14 +91,18 @@ namespace URLDownloader
             rTBox.Text += s;
         }
 
-        private void chargeBackgroundWorker()
+        private void chargeBackgroundWorker(bool switchONOFF)
         {
-            background = new BackgroundWorker();
-            background.DoWork += BgWReportProgress;
-            background.ProgressChanged += updateProgress;
-            background.RunWorkerCompleted += ProgressComplete;
-            background.WorkerReportsProgress = true;
-            background.RunWorkerAsync();
+            if(switchONOFF)
+            {
+                background.RunWorkerAsync();
+            }
+            else
+            {
+                background.CancelAsync();
+                background.Dispose();
+            }
+            
         }
         private void ProgressComplete(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -101,19 +111,28 @@ namespace URLDownloader
         }
         private void updateProgress(object sender, ProgressChangedEventArgs e)
         {
-            typeMessageToTtBox(Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
+            //typeMessageToTtBox(Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
+            if (Udler.getTotalPageNum() > 0 || Udler.getProgressPageNum() > 0)
+            {
+                inteveneUIwithThread("3/" + Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
+            }
+                
             progressBar1.Value = e.ProgressPercentage;
         }
         private void BgWReportProgress(object sender, DoWorkEventArgs e)
         {
-            while(!Udler.isDlFinished&&!timetoClose)
+            while(!(Udler.isDlFinished)&&!timetoClose)
             {
-                decimal result = ((decimal)(Udler.getProgressPageNum()) / (decimal)(Udler.getTotalPageNum())) * (decimal)100.0;
-                
-                int avgOfprogess = Convert.ToInt32(result);
-                background.ReportProgress(avgOfprogess);
-                Console.Out.WriteLine(result);
-                inteveneUIwithThread("3/"+Convert.ToString(result));
+                if(Udler.getTotalPageNum()>0|| Udler.getProgressPageNum()>0)
+                {
+                    decimal result = ((decimal)(Udler.getProgressPageNum()) / (decimal)(Udler.getTotalPageNum())) * (decimal)100.0;
+
+                    int avgOfprogess = Convert.ToInt32(result);
+                    background.ReportProgress(avgOfprogess);
+                    //Console.Out.WriteLine(result);
+                    inteveneUIwithThread("3/" + Convert.ToString(result));
+                }
+
             }
         }
 
@@ -123,28 +142,29 @@ namespace URLDownloader
         }
         private void sendRequestOrder()
         {
+            RqOrder order;
             string v1=TitlettBox.Text;
             string v2 = FPUrlTtBox.Text;
             string v3=FBDialog1.SelectedPath;
+            chargeBackgroundWorker(true);
+            Thread.Sleep(3000);
             if (dlRuleCBox.Text.Equals("FinalEpNum") )
             {
-                RqOrder order = new RqOrder(v1,v2,v3,RqOrder.BASE_ON_FINAL_EPNUM);
+                order = new RqOrder(v1,v2,v3,RqOrder.BASE_ON_FINAL_EPNUM);
                 order.addURLs(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue));
-                chargeBackgroundWorker();
                 Udler = new UDdler(order);
-                Udler.doDownloadMethod(2);
+                Udler.doDownloadMethod(2,false);
 
             }
             else if (dlRuleCBox.SelectedText.Equals("AllURLs"))
             {
-                RqOrder order = new RqOrder(v1, v2, v3, RqOrder.BASE_ON_ALL_PAGEURL);
+                order = new RqOrder(v1, v2, v3, RqOrder.BASE_ON_ALL_PAGEURL);
                 for (int CrtNum = 0; CrtNum < DldataView.Rows.Count; CrtNum++)
                 {
                     order.addURLs(Convert.ToString(DldataView.Rows[CrtNum].Cells[1].FormattedValue));
                 }
-                chargeBackgroundWorker();
                 Udler = new UDdler(order);
-                Udler.doDownloadMethod(1);
+                Udler.doDownloadMethod(1,false);
             }
             else
             {
@@ -157,14 +177,20 @@ namespace URLDownloader
             string[] exam = { "debugful", "http://w6.loxa.edu.tw/a13302001/000.png","", "3" };
             exam[2] = FBDialog1.SelectedPath;
             RqOrder order;
+            chargeBackgroundWorker(true);
+            Console.Out.WriteLine("BackgroundWorker has Charged");
+            typeMessageToTtBox("BackgroundWorker has Charged");
+            Thread.Sleep(5000);
             switch (dlRuleCBox.SelectedIndex)
             {
                 case 0:
                     order = new RqOrder(exam[0], exam[1], exam[2], RqOrder.BASE_ON_FINAL_EPNUM);
                     order.addURLs(exam[3]);
-                    chargeBackgroundWorker();
                     Udler = new UDdler(order);
-                    Udler.doDownloadMethod(2);
+                    Udler.doDownloadMethod(2,true);
+                    typeMessageToTtBox("Download Request has Send");
+                    Console.Out.WriteLine("Download Request has Send");
+                    Thread.Sleep(5000);
                     break;
                 case 1:
                     order = new RqOrder(exam[0], exam[1], exam[2], RqOrder.BASE_ON_ALL_PAGEURL);
@@ -172,10 +198,12 @@ namespace URLDownloader
                     {
                         order.addURLs("http://w6.loxa.edu.tw/a13302001/00" + Convert.ToString(num) + ".png");
                     }
-                    chargeBackgroundWorker();
                     Udler = new UDdler(order);
-                    Udler.doDownloadMethod(1);
-                        break;
+                    Udler.doDownloadMethod(1,true);
+                    Console.Out.WriteLine("Download Request has Send");
+                    typeMessageToTtBox("Download Request has Send");
+                    Thread.Sleep(5000);
+                    break;
                 default:
                     typeMessageToTtBox("ERROR Rising On DownloadRule");
                     break;
@@ -208,11 +236,19 @@ namespace URLDownloader
 
             }
         }
+        private void threadingDownloadWork()
+        {
+            while(!(timetoClose))
+            {
+
+            }
+        }
         private void inteveneUIwithThread(string code)
         {
             //格式為Num/String
             //Num 指定要改部位
             //string 用在內容物為布林時，當輸數字，大於0為真
+            //0=,1=開始下載按鈕,2=進度條,3=訊息欄
             string[] parsed = code.Split('/');
             bool conver = false;
             switch(Convert.ToInt16(parsed[0]))

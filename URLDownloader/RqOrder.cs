@@ -59,7 +59,7 @@ namespace URLDownloader
             {
                 Int16 FpageNum = Convert.ToInt16(getTFFileName(1));
                 Int16 LastPageNum = Convert.ToInt16(URLs[0]);
-                return LastPageNum - (FpageNum - 1); 
+                return LastPageNum - (FpageNum); 
 
             }
             

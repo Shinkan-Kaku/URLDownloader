@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.IO;
+using System.Threading;
 
 namespace URLDownloader
 {
@@ -28,11 +29,11 @@ namespace URLDownloader
         {
             pack = RO;
             isDlFinished = false;
-            DlTotalPrg= 1 + RO.getAllPageNumber();
+            DlTotalPrg= RO.getAllPageNumber();
             DlProgress =0;
         }
 
-        public void doDownloadMethod(int method)
+        public void doDownloadMethod(int method,bool isLowSpeedToDebug)
         {
             //1-AllUrl 2-FinalPN
             WebClient wc = new WebClient();
@@ -49,12 +50,13 @@ namespace URLDownloader
                         //Console.Out.WriteLine("From:" + pack.getURLs(num));
                         //Console.Out.WriteLine("File:" + pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) +"."+ pack.getFileName(2, num));
                        // wc.DownloadFile("http://blog.darkthread.net/images/darkthreadbanner.gif", "D:\\darkthread.gif");
-                        DlProgress = num + 2;
+                        DlProgress++;
                        Console.Out.WriteLine("DlProgress" + DlProgress + "/Total:" + DlTotalPrg);
                        Console.Out.WriteLine(pack.getURLs(num));
                         wc.DownloadFile(pack.getURLs(num), pack.getPath()+"\\"+pack.getTitleFileName() +"\\"+ Convert.ToString(num+1)+"."+pack.getFileName(2,num));
                         //Console.Out.WriteLine((decimal)DlProgress / (decimal)DlTotalPrg);
-                        //Console.Out.WriteLine("Progress:" + Convert.ToString((100.0*(DlProgress/DlTotalPrg))));                    
+                        //Console.Out.WriteLine("Progress:" + Convert.ToString((100.0*(DlProgress/DlTotalPrg)))); 
+                        Thread.Sleep((isLowSpeedToDebug? 5000:1000));
                     }
                     isDlFinished = true;
 
@@ -76,11 +78,11 @@ namespace URLDownloader
                     {
 
                         decimal turndNum = Convert.ToDecimal(num);
-                        DlProgress = num + 2;
+                        DlProgress++;
                         Console.Out.WriteLine("DlProgress" + DlProgress + "/Total:" + DlTotalPrg);
                         Console.Out.WriteLine(WebpageURL + turndNum.ToString(toFormat) + "." + pack.getTFFileName(2));
                         wc.DownloadFile(WebpageURL + turndNum.ToString(toFormat) +"."+ pack.getTFFileName(2), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) + "." + pack.getTFFileName(2));
-                        
+                        Thread.Sleep((isLowSpeedToDebug ? 5000 : 1000));
                     }
                     isDlFinished = true;
                     break;
