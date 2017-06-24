@@ -12,6 +12,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 
 delegate void SetTextCallback(string text);
+delegate string GetTextCallback();
 
 namespace URLDownloader
 {
@@ -31,9 +32,9 @@ namespace URLDownloader
             Udler = new UDdler();
             timetoClose = false;
             FBChoiceListner = new Thread(threadcheckingFBCChoiced);
-            Uldlworker = new Thread(threadingDownloadWork);
+            //Uldlworker = new Thread(threadingDownloadWork);
             FBChoiceListner.Start();
-            Uldlworker.Start();
+            //Uldlworker.Start();
             background = new BackgroundWorker();
             background.DoWork += BgWReportProgress;
             background.ProgressChanged += updateProgress;
@@ -73,10 +74,16 @@ namespace URLDownloader
             switch (ModeCB.SelectedIndex)
             {
                 case 0:
-                    sendRequestOrder();
+                    Uldlworker = new Thread(sendRequestOrder);
+                    //sendRequestOrder();
+                    chargeBackgroundWorker(true);
+                    Uldlworker.Start();
                     break;
                 case 1:
-                    sendExampleRequestOrder();
+                    Uldlworker = new Thread(sendExampleRequestOrder);
+                    //sendExampleRequestOrder();
+                    chargeBackgroundWorker(true);
+                    Uldlworker.Start();
                     break;
                 default:
                     typeMessageToTtBox("ERROR Rising on ModeCB");
@@ -146,7 +153,6 @@ namespace URLDownloader
             string v1=TitlettBox.Text;
             string v2 = FPUrlTtBox.Text;
             string v3=FBDialog1.SelectedPath;
-            chargeBackgroundWorker(true);
             Thread.Sleep(3000);
             if (dlRuleCBox.Text.Equals("FinalEpNum") )
             {
@@ -177,18 +183,18 @@ namespace URLDownloader
             string[] exam = { "debugful", "http://w6.loxa.edu.tw/a13302001/000.png","", "3" };
             exam[2] = FBDialog1.SelectedPath;
             RqOrder order;
-            chargeBackgroundWorker(true);
+            
             Console.Out.WriteLine("BackgroundWorker has Charged");
-            typeMessageToTtBox("BackgroundWorker has Charged");
+            inteveneUIwithThread("3/BackgroundWorker has Charged");
             Thread.Sleep(5000);
-            switch (dlRuleCBox.SelectedIndex)
+            switch (Convert.ToInt16(requestValueFromUI(0)))
             {
                 case 0:
                     order = new RqOrder(exam[0], exam[1], exam[2], RqOrder.BASE_ON_FINAL_EPNUM);
                     order.addURLs(exam[3]);
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(2,true);
-                    typeMessageToTtBox("Download Request has Send");
+                    inteveneUIwithThread("3/Download Request has Send");
                     Console.Out.WriteLine("Download Request has Send");
                     Thread.Sleep(5000);
                     break;
@@ -201,11 +207,11 @@ namespace URLDownloader
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(1,true);
                     Console.Out.WriteLine("Download Request has Send");
-                    typeMessageToTtBox("Download Request has Send");
+                    inteveneUIwithThread("3/Download Request has Send");
                     Thread.Sleep(5000);
                     break;
                 default:
-                    typeMessageToTtBox("ERROR Rising On DownloadRule");
+                    inteveneUIwithThread("3/ERROR Rising On DownloadRule");
                     break;
             }
 
@@ -313,6 +319,33 @@ namespace URLDownloader
 
             }
         
+        }
+        private string requestValueFromUI(Int16 index)
+        {
+            switch(index)
+            {
+                case 0:
+                    if(dlRuleCBox.InvokeRequired)
+                    {
+                        string getted="";
+                        var tasktoInvoke = new Action(()=>getted = Convert.ToString(dlRuleCBox.SelectedIndex) );
+                        dlRuleCBox.Invoke(tasktoInvoke);
+
+                        return getted;
+                    }
+                    else
+                    {
+                        return Convert.ToString(dlRuleCBox.SelectedIndex);
+                    }
+                    
+                    break;
+                case 1:
+                    return "";
+                    break;
+                default:
+                    return "";
+                    break;
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
