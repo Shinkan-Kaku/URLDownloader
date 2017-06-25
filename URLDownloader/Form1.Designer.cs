@@ -51,6 +51,7 @@
             this.TitleCdtCB = new System.Windows.Forms.CheckBox();
             this.FPUrlCdtCB = new System.Windows.Forms.CheckBox();
             this.DlPathCdtCB = new System.Windows.Forms.CheckBox();
+            this.ListvcdtCB = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DldataView)).BeginInit();
@@ -200,10 +201,17 @@
             this.DlPathCdtCB.Name = "DlPathCdtCB";
             this.DlPathCdtCB.UseVisualStyleBackColor = true;
             // 
+            // ListvcdtCB
+            // 
+            resources.ApplyResources(this.ListvcdtCB, "ListvcdtCB");
+            this.ListvcdtCB.Name = "ListvcdtCB";
+            this.ListvcdtCB.UseVisualStyleBackColor = true;
+            // 
             // URLSDownloader
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ListvcdtCB);
             this.Controls.Add(this.DlPathCdtCB);
             this.Controls.Add(this.FPUrlCdtCB);
             this.Controls.Add(this.TitleCdtCB);
@@ -248,6 +256,7 @@
         private System.Windows.Forms.DataGridView DldataView;
         private System.Windows.Forms.DataGridViewTextBoxColumn Num;
         private System.Windows.Forms.DataGridViewTextBoxColumn Url;
+        private System.Windows.Forms.CheckBox ListvcdtCB;
     }
 }
 

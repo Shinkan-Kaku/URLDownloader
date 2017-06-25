@@ -52,17 +52,7 @@ namespace URLDownloader
         {
             FBDialog1.ShowDialog();
         }
-        private void testDownloading()
-        {
-            WebClient wc = new WebClient();
-            string TargetURL = "";
 
-            string SavingURL = FBDialog1.SelectedPath;
-            typeMessageToTtBox(SavingURL);
-            Console.WriteLine(SavingURL);
-           
-            
-        }
 
         private void eventLog1_EntryWritten(object sender, System.Diagnostics.EntryWrittenEventArgs e)
         {
@@ -114,30 +104,39 @@ namespace URLDownloader
         private void ProgressComplete(object sender, RunWorkerCompletedEventArgs e)
         {
             inteveneUIwithThread("3/Download Request Complete");
-            //progressBar1.Visible = false;
+            progressBar1.Visible = false;
+            inteveneUIwithThread("3/You Can Shutdown or Do next Request peacefully");
         }
         private void updateProgress(object sender, ProgressChangedEventArgs e)
         {
             //typeMessageToTtBox(Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
             if (Udler.getTotalPageNum() > 0 || Udler.getProgressPageNum() > 0)
             {
-                inteveneUIwithThread("3/" + Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
+                //inteveneUIwithThread("3/" + Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
             }
                 
             progressBar1.Value = e.ProgressPercentage;
         }
         private void BgWReportProgress(object sender, DoWorkEventArgs e)
         {
-            while(!(Udler.isDlFinished)&&!timetoClose)
+            int crtPage = 0;
+            while (!(Udler.isDlFinished)&&!timetoClose)
             {
+                
                 if(Udler.getTotalPageNum()>0|| Udler.getProgressPageNum()>0)
                 {
+
+
                     decimal result = ((decimal)(Udler.getProgressPageNum()) / (decimal)(Udler.getTotalPageNum())) * (decimal)100.0;
 
                     int avgOfprogess = Convert.ToInt32(result);
                     background.ReportProgress(avgOfprogess);
                     //Console.Out.WriteLine(result);
-                    inteveneUIwithThread("3/" + Convert.ToString(result));
+                    if (crtPage < Udler.getProgressPageNum())
+                    {
+                        crtPage = Udler.getProgressPageNum();
+                        inteveneUIwithThread("3/" +"Current Progress :Page"+ Convert.ToString(crtPage));
+                    }
                 }
 
             }
@@ -194,7 +193,6 @@ namespace URLDownloader
                     order.addURLs(exam[3]);
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(2,true);
-                    inteveneUIwithThread("3/Download Request has Send");
                     Console.Out.WriteLine("Download Request has Send");
                     Thread.Sleep(5000);
                     break;
@@ -254,17 +252,18 @@ namespace URLDownloader
             //格式為Num/String
             //Num 指定要改部位
             //string 用在內容物為布林時，當輸數字，大於0為真
-            //0=,1=開始下載按鈕,2=進度條,3=訊息欄
+            //0=,1=開始下載按鈕,2=進度條,3=訊息欄,4=資料驗證CB
             string[] parsed = code.Split('/');
             bool conver = false;
-            switch(Convert.ToInt16(parsed[0]))
+
+            switch (Convert.ToInt16(parsed[0]))
             {
                 case 0 :
                     conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
-                    var checkCheckBox = new Action(() => DlPathCdtCB.Checked = conver);
+                    var checkDlPathCdtCB = new Action(() => DlPathCdtCB.Checked = conver);
                     if(DlPathCdtCB.InvokeRequired)
                     {
-                        DlPathCdtCB.Invoke(checkCheckBox);
+                        DlPathCdtCB.Invoke(checkDlPathCdtCB);
                     }
                     else
                     {
@@ -311,6 +310,19 @@ namespace URLDownloader
                         typeMessageToTtBox(parsed[1]);
                     }
                     break;
+                case 4:
+                    conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
+                    var checkListvcdtCB = new Action(() => ListvcdtCB.Checked = conver);
+                    if(ListvcdtCB.InvokeRequired)
+                    {
+                        ListvcdtCB.Invoke(checkListvcdtCB);
+                    }
+                    else
+                    {
+                        ListvcdtCB.Checked = conver;
+                    }
+                    break;
+
                 default:
                     break;
 

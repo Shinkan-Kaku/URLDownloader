@@ -324,7 +324,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="rTBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 203</value>
@@ -348,7 +348,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rTBox.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <metadata name="Num.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -459,7 +459,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 172</value>
@@ -480,7 +480,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;progressBar1.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="initButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>269, 137</value>
@@ -504,7 +504,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;initButton.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <metadata name="FBDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>25, 17</value>
@@ -534,7 +534,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TitleCdtCB.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="FPUrlCdtCB.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -561,7 +561,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;FPUrlCdtCB.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="DlPathCdtCB.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -588,6 +588,33 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;DlPathCdtCB.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ListvcdtCB.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ListvcdtCB.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="ListvcdtCB.Location" type="System.Drawing.Point, System.Drawing">
+    <value>449, 143</value>
+  </data>
+  <data name="ListvcdtCB.Size" type="System.Drawing.Size, System.Drawing">
+    <value>15, 14</value>
+  </data>
+  <data name="ListvcdtCB.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;ListvcdtCB.Name" xml:space="preserve">
+    <value>ListvcdtCB</value>
+  </data>
+  <data name="&gt;&gt;ListvcdtCB.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ListvcdtCB.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;ListvcdtCB.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
