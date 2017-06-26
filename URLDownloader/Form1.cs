@@ -205,7 +205,6 @@ namespace URLDownloader
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(1,true);
                     Console.Out.WriteLine("Download Request has Send");
-                    inteveneUIwithThread("3/Download Request has Send");
                     Thread.Sleep(5000);
                     break;
                 default:
@@ -228,8 +227,32 @@ namespace URLDownloader
                 {
                     inteveneUIwithThread("0/1"); 
                 }
-               
-                if (DlPathCdtCB.Checked && TitleCdtCB.Checked && FPUrlCdtCB.Checked)
+               if (requestValueFromUI(1).Equals("FinalEpNum") )
+                {
+                    if (Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "^(\\d{1,3})$"))
+                    {
+                        inteveneUIwithThread("4/1");
+                    }
+                    else
+                    {
+                        inteveneUIwithThread("4/0");
+                    }
+
+                }
+               else if(requestValueFromUI(1).Equals("AllURLs"))
+                {
+                    if(Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "http(s?)://(([0-9.\\-A-Za-z]+)/)+\\w+.(jpg|png|gif|bmp)"))
+                    {
+                        inteveneUIwithThread("4/1");
+                    }
+                    else
+                    {
+                        inteveneUIwithThread("4/0");
+                    }
+                }
+
+
+                if (DlPathCdtCB.Checked && TitleCdtCB.Checked && FPUrlCdtCB.Checked&& ListvcdtCB.Checked)
                 {
                     inteveneUIwithThread("1/1"); 
                 }
@@ -352,6 +375,18 @@ namespace URLDownloader
                     
                     break;
                 case 1:
+                    if (dlRuleCBox.InvokeRequired)
+                    {
+                        string getted = "";
+                        var tasktoInvoke = new Action(() => getted = Convert.ToString(dlRuleCBox.Text));
+                        dlRuleCBox.Invoke(tasktoInvoke);
+
+                        return getted;
+                    }
+                    else
+                    {
+                        return Convert.ToString(dlRuleCBox.Text);
+                    }
                     return "";
                     break;
                 default:
