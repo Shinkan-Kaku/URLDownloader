@@ -23,7 +23,8 @@ namespace URLDownloader
         //Thread dlListner;
         Thread FBChoiceListner;
         Thread Uldlworker;
-        BackgroundWorker background;
+        Thread UIUpdayer;
+        //BackgroundWorker background;
         //private BackgroundWorker backgroundworker;
         bool timetoClose;
         public URLSDownloader()
@@ -35,11 +36,14 @@ namespace URLDownloader
             //Uldlworker = new Thread(threadingDownloadWork);
             FBChoiceListner.Start();
             //Uldlworker.Start();
-            background = new BackgroundWorker();
+            //background = new BackgroundWorker();
+            UIUpdayer = new Thread(updateUI);
+            /*
             background.DoWork += BgWReportProgress;
             background.ProgressChanged += updateProgress;
             background.RunWorkerCompleted += ProgressComplete;
             background.WorkerReportsProgress = true;
+            */
             typeMessageToTtBox("Welcome");
         }
 
@@ -92,12 +96,17 @@ namespace URLDownloader
         {
             if(switchONOFF)
             {
-                background.RunWorkerAsync();
+                //background.RunWorkerAsync();
+                UIUpdayer.Start();
             }
             else
             {
-                background.CancelAsync();
-                background.Dispose();
+                inteveneUIwithThread("3/Download Request Complete");
+                progressBar1.Visible = false;
+                inteveneUIwithThread("3/You Can Shutdown or Do next Request peacefully");
+                UIUpdayer.Abort();
+                //background.CancelAsync();
+                //background.Dispose();
             }
             
         }
@@ -130,7 +139,7 @@ namespace URLDownloader
                     decimal result = ((decimal)(Udler.getProgressPageNum()) / (decimal)(Udler.getTotalPageNum())) * (decimal)100.0;
 
                     int avgOfprogess = Convert.ToInt32(result);
-                    background.ReportProgress(avgOfprogess);
+                    //background.ReportProgress(avgOfprogess);
                     //Console.Out.WriteLine(result);
                     if (crtPage < Udler.getProgressPageNum())
                     {
@@ -138,10 +147,36 @@ namespace URLDownloader
                         inteveneUIwithThread("3/" +"Current Progress :Page"+ Convert.ToString(crtPage));
                     }
                 }
+                
+            }
+            Console.Out.WriteLine("BgWReportProgress has Over");
+        }
+        private void updateUI()
+        {
+            int crtPage = 0;
+            while (!(Udler.isDlFinished) && !timetoClose)
+            {
+                if (Udler.getTotalPageNum() > 0 || Udler.getProgressPageNum() > 0)
+                {
+                    decimal result = ((decimal)(Udler.getProgressPageNum()) / (decimal)(Udler.getTotalPageNum())) * (decimal)100.0;
+
+
+                    //updateProgrssHere
+                    Console.Out.WriteLine("2/" + Convert.ToString(Math.Floor(result)));
+                    //inteveneUIwithThread("2/" + Convert.ToString(result));
+                    Thread.Sleep(3000);
+                    inteveneUIwithThread("2/" + Convert.ToString(Math.Floor(result)));
+
+
+                    if (crtPage < Udler.getProgressPageNum())
+                    {
+                        crtPage = Udler.getProgressPageNum();
+                        inteveneUIwithThread("3/" + "Current Progress :Page" + Convert.ToString(crtPage));
+                    }
+                }
 
             }
         }
-
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
 
@@ -153,28 +188,28 @@ namespace URLDownloader
             string v2 = FPUrlTtBox.Text;
             string v3=FBDialog1.SelectedPath;
             Thread.Sleep(3000);
-            if (dlRuleCBox.Text.Equals("FinalEpNum") )
+            switch (Convert.ToInt16(requestValueFromUI(0)))
             {
-                order = new RqOrder(v1,v2,v3,RqOrder.BASE_ON_FINAL_EPNUM);
-                order.addURLs(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue));
-                Udler = new UDdler(order);
-                Udler.doDownloadMethod(2,false);
+                case 0:
+                    order = new RqOrder(v1, v2, v3, RqOrder.BASE_ON_FINAL_EPNUM);
+                    order.addURLs(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue));
+                    Udler = new UDdler(order);
+                    Udler.doDownloadMethod(2, false);
+                    break;
+                case 1:
+                    order = new RqOrder(v1, v2, v3, RqOrder.BASE_ON_ALL_PAGEURL);
+                    for (int CrtNum = 0; CrtNum < DldataView.Rows.Count; CrtNum++)
+                    {
+                        order.addURLs(Convert.ToString(DldataView.Rows[CrtNum].Cells[1].FormattedValue));
+                    }
+                    Udler = new UDdler(order);
+                    Udler.doDownloadMethod(1, false);
+                    break;
+                default:
+                    inteveneUIwithThread("3/ERROR Rising On DownloadRule");
+                    break;
+            }
 
-            }
-            else if (dlRuleCBox.SelectedText.Equals("AllURLs"))
-            {
-                order = new RqOrder(v1, v2, v3, RqOrder.BASE_ON_ALL_PAGEURL);
-                for (int CrtNum = 0; CrtNum < DldataView.Rows.Count; CrtNum++)
-                {
-                    order.addURLs(Convert.ToString(DldataView.Rows[CrtNum].Cells[1].FormattedValue));
-                }
-                Udler = new UDdler(order);
-                Udler.doDownloadMethod(1,false);
-            }
-            else
-            {
-                typeMessageToTtBox("ERROR Rising On sendRequestOrder");
-            }
 
         }
         private void sendExampleRequestOrder()

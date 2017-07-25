@@ -43,7 +43,7 @@ namespace URLDownloader
                     checkDirectoryExist(pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
                     DlProgress = 1;
                     Console.Out.WriteLine(pack.getFirstPageUrl());
-                    wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "0." + pack.getTFFileName(2));
+                    wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2));
 
                     for (int num = 0;num<pack.getAllPageNumber()-1;num++ )
                     {
@@ -64,7 +64,7 @@ namespace URLDownloader
                 case 2:
                     checkDirectoryExist(pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
                     DlProgress = 1;
-                    wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "0." + pack.getTFFileName(2));
+                    wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2));
                     String toFormat="";
                     for(int tar=0;tar<pack.getTFFileName(1).Length;tar++)
                     {
