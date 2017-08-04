@@ -27,9 +27,13 @@ namespace URLDownloader
         //BackgroundWorker background;
         //private BackgroundWorker backgroundworker;
         bool timetoClose;
+
+        String versionString = "Version "+"B1.51";
+
         public URLSDownloader()
         {
             InitializeComponent();
+            Vlabel.Text = versionString;
             Udler = new UDdler();
             timetoClose = false;
             FBChoiceListner = new Thread(threadcheckingFBCChoiced);
@@ -102,8 +106,9 @@ namespace URLDownloader
             else
             {
                 inteveneUIwithThread("3/Download Request Complete");
-                progressBar1.Visible = false;
+                inteveneUIwithThread("2/false");
                 inteveneUIwithThread("3/You Can Shutdown or Do next Request peacefully");
+                Thread.Sleep(3000);
                 UIUpdayer.Abort();
                 //background.CancelAsync();
                 //background.Dispose();
@@ -176,6 +181,7 @@ namespace URLDownloader
                 }
 
             }
+            chargeBackgroundWorker(false);
         }
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
@@ -342,31 +348,50 @@ namespace URLDownloader
                     }
                     break;
                 case 2:
-                    var setprogress = new Action(() => progressBar1.Value = Convert.ToInt16(parsed[1]));
-                    var updateprogrssbar = new Action(() => progressBar1.Update());
-                    if(progressBar1.InvokeRequired)
+
+                    if (parsed[1].Equals("true") || parsed[1].Equals("false"))
                     {
-                        progressBar1.Invoke(setprogress);
-                        progressBar1.Invoke(updateprogrssbar);
+                        conver = (parsed[1].Equals("true")) ? true : false;
+                        var setProbar1Visable = new Action(() => progressBar1.Visible = conver);
+
+                        if(progressBar1.InvokeRequired)
+                        {
+                            progressBar1.Invoke(setProbar1Visable);
+                        }
+                        else
+                        {
+                            progressBar1.Visible = conver;
+                        }
+
                     }
                     else
                     {
-                        progressBar1.Value = Convert.ToInt16(parsed[1]);
-                        progressBar1.Update();
+                        var setprogress = new Action(() => progressBar1.Value = Convert.ToInt16(parsed[1]));
+                        var updateprogrssbar = new Action(() => progressBar1.Update());
+                        if (progressBar1.InvokeRequired)
+                        {
+                            progressBar1.Invoke(setprogress);
+                            progressBar1.Invoke(updateprogrssbar);
+                        }
+                        else
+                        {
+                            progressBar1.Value = Convert.ToInt16(parsed[1]);
+                            progressBar1.Update();
+                        }
                     }
                     break;
                 case 3:
-                    var writeLineTpTtbox = new Action(()=>rTBox.Text += "\r\n");
-                    var typeMessagesToTtbox = new Action(() => rTBox.Text += parsed[1]);
-                    if(rTBox.InvokeRequired)
-                    {
-                        rTBox.Invoke(writeLineTpTtbox);
-                        rTBox.Invoke(typeMessagesToTtbox);
-                    }
-                    else
-                    {
-                        typeMessageToTtBox(parsed[1]);
-                    }
+                        var writeLineTpTtbox = new Action(() => rTBox.Text += "\r\n");
+                        var typeMessagesToTtbox = new Action(() => rTBox.Text += parsed[1]);
+                        if (rTBox.InvokeRequired)
+                        {
+                            rTBox.Invoke(writeLineTpTtbox);
+                            rTBox.Invoke(typeMessagesToTtbox);
+                        }
+                        else
+                        {
+                            typeMessageToTtBox(parsed[1]);
+                        }
                     break;
                 case 4:
                     conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;

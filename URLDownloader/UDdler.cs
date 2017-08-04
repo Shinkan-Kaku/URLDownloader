@@ -45,7 +45,7 @@ namespace URLDownloader
                     Console.Out.WriteLine(pack.getFirstPageUrl());
                     wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2));
 
-                    for (int num = 0;num<pack.getAllPageNumber()-1;num++ )
+                    for (int num = 1;num<pack.getAllPageNumber();num++ )
                     {
                         //Console.Out.WriteLine("From:" + pack.getURLs(num));
                         //Console.Out.WriteLine("File:" + pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) +"."+ pack.getFileName(2, num));
@@ -74,7 +74,7 @@ namespace URLDownloader
                     int startPage = Convert.ToInt16(pack.getTFFileName(1));
                     int finalPNum = Convert.ToInt16(pack.getURLs(0));
                     string WebpageURL = pack.getFirstPageUrl().Substring(0, pack.getFirstPageUrl().LastIndexOf('/')+1);
-                    for (int num = startPage+1; num <finalPNum; num++)
+                    for (int num = startPage+1; num <=finalPNum; num++)
                     {
 
                         decimal turndNum = Convert.ToDecimal(num);
