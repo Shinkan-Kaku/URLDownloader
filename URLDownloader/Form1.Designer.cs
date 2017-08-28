@@ -53,6 +53,7 @@
             this.DlPathCdtCB = new System.Windows.Forms.CheckBox();
             this.ListvcdtCB = new System.Windows.Forms.CheckBox();
             this.Vlabel = new System.Windows.Forms.Label();
+            this.BnReset = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DldataView)).BeginInit();
@@ -61,6 +62,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.Vlabel);
             this.panel1.Controls.Add(this.Address);
             this.panel1.Controls.Add(this.FPUrlTtBox);
             this.panel1.Controls.Add(this.TitlettBox);
@@ -115,7 +117,8 @@
             this.ModeCB.FormattingEnabled = true;
             this.ModeCB.Items.AddRange(new object[] {
             resources.GetString("ModeCB.Items"),
-            resources.GetString("ModeCB.Items1")});
+            resources.GetString("ModeCB.Items1"),
+            resources.GetString("ModeCB.Items2")});
             resources.ApplyResources(this.ModeCB, "ModeCB");
             this.ModeCB.Name = "ModeCB";
             this.ModeCB.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -213,11 +216,17 @@
             resources.ApplyResources(this.Vlabel, "Vlabel");
             this.Vlabel.Name = "Vlabel";
             // 
+            // BnReset
+            // 
+            resources.ApplyResources(this.BnReset, "BnReset");
+            this.BnReset.Name = "BnReset";
+            this.BnReset.UseVisualStyleBackColor = true;
+            // 
             // URLSDownloader
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.Vlabel);
+            this.Controls.Add(this.BnReset);
             this.Controls.Add(this.ListvcdtCB);
             this.Controls.Add(this.DlPathCdtCB);
             this.Controls.Add(this.FPUrlCdtCB);
@@ -265,6 +274,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Url;
         private System.Windows.Forms.CheckBox ListvcdtCB;
         private System.Windows.Forms.Label Vlabel;
+        private System.Windows.Forms.Button BnReset;
     }
 }
 

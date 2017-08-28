@@ -58,9 +58,17 @@ namespace URLDownloader
             else
             {
                 Int16 FpageNum = Convert.ToInt16(getTFFileName(1));
-                if (FpageNum == 0) FpageNum = -1;
-                 Int16 LastPageNum = Convert.ToInt16(URLs[0]);
-                return LastPageNum - (FpageNum); 
+                Int16 LastPageNum = Convert.ToInt16(URLs[0]);
+                if (FpageNum == 0)
+                {
+                    return LastPageNum;
+                }
+                else
+                {
+                    return LastPageNum - (FpageNum);
+                }
+                 
+                
 
             }
             

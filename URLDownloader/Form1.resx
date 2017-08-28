@@ -118,10 +118,37 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Vlabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="Vlabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>202, 16</value>
+  </data>
+  <data name="Vlabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 12</value>
+  </data>
+  <data name="Vlabel.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="Vlabel.Text" xml:space="preserve">
+    <value>Vlabel</value>
+  </data>
+  <data name="&gt;&gt;Vlabel.Name" xml:space="preserve">
+    <value>Vlabel</value>
+  </data>
+  <data name="&gt;&gt;Vlabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Vlabel.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;Vlabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="Address.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Address.Location" type="System.Drawing.Point, System.Drawing">
     <value>107, 10</value>
   </data>
@@ -144,7 +171,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;Address.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="FPUrlTtBox.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -168,7 +195,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;FPUrlTtBox.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="TitlettBox.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -192,7 +219,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;TitlettBox.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="FpageLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -219,7 +246,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;FpageLabel.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="SNameLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -246,7 +273,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;SNameLabel.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="dlRuleCBox.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -276,13 +303,16 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;dlRuleCBox.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="ModeCB.Items" xml:space="preserve">
     <value>Normal</value>
   </data>
   <data name="ModeCB.Items1" xml:space="preserve">
     <value>Debug</value>
+  </data>
+  <data name="ModeCB.Items2" xml:space="preserve">
+    <value> </value>
   </data>
   <data name="ModeCB.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 13</value>
@@ -303,7 +333,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;ModeCB.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 12</value>
@@ -350,24 +380,57 @@
   <data name="&gt;&gt;rTBox.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
+  <data name="&gt;&gt;DldataView.Name" xml:space="preserve">
+    <value>DldataView</value>
+  </data>
+  <data name="&gt;&gt;DldataView.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DldataView.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;DldataView.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;panel3.Name" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="&gt;&gt;panel3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel3.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>378, 203</value>
+  </data>
+  <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>278, 365</value>
+  </data>
+  <data name="panel2.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
   <metadata name="Num.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="Num.HeaderText" xml:space="preserve">
-    <value>No.</value>
-  </data>
-  <data name="Num.Width" type="System.Int32, mscorlib">
-    <value>50</value>
-  </data>
   <metadata name="Url.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="Url.HeaderText" xml:space="preserve">
-    <value>Url</value>
-  </data>
-  <data name="Url.Width" type="System.Int32, mscorlib">
-    <value>200</value>
-  </data>
   <data name="DldataView.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -392,20 +455,23 @@
   <data name="&gt;&gt;DldataView.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="BnAddUrlsLog.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <metadata name="Num.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Num.HeaderText" xml:space="preserve">
+    <value>No.</value>
   </data>
-  <data name="BnAddUrlsLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>101, 3</value>
+  <data name="Num.Width" type="System.Int32, mscorlib">
+    <value>50</value>
   </data>
-  <data name="BnAddUrlsLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+  <metadata name="Url.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Url.HeaderText" xml:space="preserve">
+    <value>Url</value>
   </data>
-  <data name="BnAddUrlsLog.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="BnAddUrlsLog.Text" xml:space="preserve">
-    <value>add</value>
+  <data name="Url.Width" type="System.Int32, mscorlib">
+    <value>200</value>
   </data>
   <data name="&gt;&gt;BnAddUrlsLog.Name" xml:space="preserve">
     <value>BnAddUrlsLog</value>
@@ -440,26 +506,32 @@
   <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>378, 203</value>
+  <data name="BnAddUrlsLog.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>278, 365</value>
+  <data name="BnAddUrlsLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 3</value>
   </data>
-  <data name="panel2.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="BnAddUrlsLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
-  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
-    <value>panel2</value>
+  <data name="BnAddUrlsLog.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
-  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="BnAddUrlsLog.Text" xml:space="preserve">
+    <value>add</value>
   </data>
-  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;BnAddUrlsLog.Name" xml:space="preserve">
+    <value>BnAddUrlsLog</value>
   </data>
-  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
-    <value>7</value>
+  <data name="&gt;&gt;BnAddUrlsLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BnAddUrlsLog.Parent" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="&gt;&gt;BnAddUrlsLog.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 172</value>
@@ -617,41 +689,44 @@
   <data name="&gt;&gt;ListvcdtCB.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="Vlabel.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="BnReset.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="Vlabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>230, 137</value>
+  <data name="BnReset.Location" type="System.Drawing.Point, System.Drawing">
+    <value>326, 574</value>
   </data>
-  <data name="Vlabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>35, 12</value>
+  <data name="BnReset.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
-  <data name="Vlabel.TabIndex" type="System.Int32, mscorlib">
+  <data name="BnReset.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
   </data>
-  <data name="Vlabel.Text" xml:space="preserve">
-    <value>Vlabel</value>
+  <data name="BnReset.Text" xml:space="preserve">
+    <value>Reset</value>
   </data>
-  <data name="&gt;&gt;Vlabel.Name" xml:space="preserve">
-    <value>Vlabel</value>
+  <data name="&gt;&gt;BnReset.Name" xml:space="preserve">
+    <value>BnReset</value>
   </data>
-  <data name="&gt;&gt;Vlabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;BnReset.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Vlabel.Parent" xml:space="preserve">
+  <data name="&gt;&gt;BnReset.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;Vlabel.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;BnReset.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>64</value>
+  </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 12</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>668, 580</value>
+    <value>668, 619</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

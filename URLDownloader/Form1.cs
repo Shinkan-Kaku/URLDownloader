@@ -27,8 +27,9 @@ namespace URLDownloader
         //BackgroundWorker background;
         //private BackgroundWorker backgroundworker;
         bool timetoClose;
+        bool Reseted = false;
 
-        String versionString = "Version "+"B1.51";
+        String versionString = "Version "+"B1.53";
 
         public URLSDownloader()
         {
@@ -37,17 +38,10 @@ namespace URLDownloader
             Udler = new UDdler();
             timetoClose = false;
             FBChoiceListner = new Thread(threadcheckingFBCChoiced);
-            //Uldlworker = new Thread(threadingDownloadWork);
             FBChoiceListner.Start();
-            //Uldlworker.Start();
-            //background = new BackgroundWorker();
+
             UIUpdayer = new Thread(updateUI);
-            /*
-            background.DoWork += BgWReportProgress;
-            background.ProgressChanged += updateProgress;
-            background.RunWorkerCompleted += ProgressComplete;
-            background.WorkerReportsProgress = true;
-            */
+
             typeMessageToTtBox("Welcome");
         }
 
@@ -101,61 +95,22 @@ namespace URLDownloader
             if(switchONOFF)
             {
                 //background.RunWorkerAsync();
-                UIUpdayer.Start();
+                if(!Reseted)UIUpdayer.Start();
             }
             else
             {
                 inteveneUIwithThread("3/Download Request Complete");
                 inteveneUIwithThread("2/false");
                 inteveneUIwithThread("3/You Can Shutdown or Do next Request peacefully");
+                resetUI();
                 Thread.Sleep(3000);
-                UIUpdayer.Abort();
+                
                 //background.CancelAsync();
                 //background.Dispose();
             }
             
         }
-        private void ProgressComplete(object sender, RunWorkerCompletedEventArgs e)
-        {
-            inteveneUIwithThread("3/Download Request Complete");
-            progressBar1.Visible = false;
-            inteveneUIwithThread("3/You Can Shutdown or Do next Request peacefully");
-        }
-        private void updateProgress(object sender, ProgressChangedEventArgs e)
-        {
-            //typeMessageToTtBox(Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
-            if (Udler.getTotalPageNum() > 0 || Udler.getProgressPageNum() > 0)
-            {
-                //inteveneUIwithThread("3/" + Udler.getProgressPageNum() + " " + Udler.getTotalPageNum());
-            }
-                
-            progressBar1.Value = e.ProgressPercentage;
-        }
-        private void BgWReportProgress(object sender, DoWorkEventArgs e)
-        {
-            int crtPage = 0;
-            while (!(Udler.isDlFinished)&&!timetoClose)
-            {
-                
-                if(Udler.getTotalPageNum()>0|| Udler.getProgressPageNum()>0)
-                {
 
-
-                    decimal result = ((decimal)(Udler.getProgressPageNum()) / (decimal)(Udler.getTotalPageNum())) * (decimal)100.0;
-
-                    int avgOfprogess = Convert.ToInt32(result);
-                    //background.ReportProgress(avgOfprogess);
-                    //Console.Out.WriteLine(result);
-                    if (crtPage < Udler.getProgressPageNum())
-                    {
-                        crtPage = Udler.getProgressPageNum();
-                        inteveneUIwithThread("3/" +"Current Progress :Page"+ Convert.ToString(crtPage));
-                    }
-                }
-                
-            }
-            Console.Out.WriteLine("BgWReportProgress has Over");
-        }
         private void updateUI()
         {
             int crtPage = 0;
@@ -169,8 +124,11 @@ namespace URLDownloader
                     //updateProgrssHere
                     Console.Out.WriteLine("2/" + Convert.ToString(Math.Floor(result)));
                     //inteveneUIwithThread("2/" + Convert.ToString(result));
-                    Thread.Sleep(3000);
-                    inteveneUIwithThread("2/" + Convert.ToString(Math.Floor(result)));
+                    Thread.Sleep(1000);
+                    if(result <=100)
+                    {
+                        inteveneUIwithThread("2/" + Convert.ToString(Math.Floor(result)));
+                    }
 
 
                     if (crtPage < Udler.getProgressPageNum())
@@ -193,7 +151,7 @@ namespace URLDownloader
             string v1=TitlettBox.Text;
             string v2 = FPUrlTtBox.Text;
             string v3=FBDialog1.SelectedPath;
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
             switch (Convert.ToInt16(requestValueFromUI(0)))
             {
                 case 0:
@@ -226,7 +184,6 @@ namespace URLDownloader
             
             Console.Out.WriteLine("BackgroundWorker has Charged");
             inteveneUIwithThread("3/BackgroundWorker has Charged");
-            Thread.Sleep(5000);
             switch (Convert.ToInt16(requestValueFromUI(0)))
             {
                 case 0:
@@ -295,7 +252,19 @@ namespace URLDownloader
 
                 if (DlPathCdtCB.Checked && TitleCdtCB.Checked && FPUrlCdtCB.Checked&& ListvcdtCB.Checked)
                 {
-                    inteveneUIwithThread("1/1"); 
+                    if(Udler.isDlFinished==false&&Udler.hasStarted)
+                    {
+                        inteveneUIwithThread("1/0");
+                    }
+                    else if(Udler.isDlFinished==false&&Udler.hasStarted==false)
+                    {
+                        inteveneUIwithThread("1/1");
+                    }
+                    else
+                    {
+                        inteveneUIwithThread("1/1");
+                    }
+                    
                 }
                 else
                 {
@@ -316,7 +285,7 @@ namespace URLDownloader
             //格式為Num/String
             //Num 指定要改部位
             //string 用在內容物為布林時，當輸數字，大於0為真
-            //0=,1=開始下載按鈕,2=進度條,3=訊息欄,4=資料驗證CB
+            //0=下載條件確認,1=開始下載按鈕,2=進度條,3=訊息欄,4=資料驗證CB,5=模式選擇CB
             string[] parsed = code.Split('/');
             bool conver = false;
 
@@ -405,7 +374,19 @@ namespace URLDownloader
                         ListvcdtCB.Checked = conver;
                     }
                     break;
+                case 5:
 
+                    var switchModeCB = new Action(() => ModeCB.SelectedIndex = Convert.ToInt16(parsed[1]));
+
+                    if(ModeCB.InvokeRequired)
+                    {
+                        ModeCB.Invoke(switchModeCB);
+                    }
+                    else
+                    {
+                        ModeCB.SelectedIndex = Convert.ToInt16(parsed[1]);
+                    }
+                    break;
                 default:
                     break;
 
@@ -462,10 +443,14 @@ namespace URLDownloader
                 ModeCB.Enabled = false;
                 UIEnableStepA_Normal();
             }
-            else
+            else if(ModeCB.Text.Equals("Debug"))
             {
                 ModeCB.Enabled = false;
                 UIEnableStepA_Debug();
+            }
+            else
+            {
+                ModeCB.Enabled = true;
             }
         }
         private void UIEnableStepA_Normal()
@@ -522,12 +507,18 @@ namespace URLDownloader
 
         private void TitlettBox_TextChanged(object sender, EventArgs e)
         {
-            if(!TitlettBox.Text.Equals("")&&TitlettBox.Text!=null&&(Regex.IsMatch(TitlettBox.Text,"[^\\?*<\":>]")))
+            if(!TitlettBox.Text.Equals("")&&TitlettBox.Text!=null&&!(Regex.IsMatch(TitlettBox.Text, ".*(\\^|\\?|\\*|<|\"|:|>|\\\\|/)+.*")))
             {
                 TitleCdtCB.Checked = true;
             }
             else
             {
+                if(Regex.IsMatch(TitlettBox.Text, ".*(\\^|\\?|\\*|<|\"|:|>|\\\\|/)+.*"))
+                {
+                    typeMessageToTtBox("Error : illegal symbols is not allowed!");
+                    TitlettBox.Text = "";
+                }
+
                 TitleCdtCB.Checked = false;
             }
         }
@@ -559,10 +550,22 @@ namespace URLDownloader
             DldataView.Rows.Add(LastPageNo, Urlstring);
         }
 
+        private void resetUI()
+        {
+            inteveneUIwithThread("5/2");
+            //dlRuleCBox.SelectedText = "";
+            //TitlettBox.Text = "";
+            //FPUrlTtBox.Text = "";
+            Udler = new UDdler();
+            Reseted = true;
+            Console.Out.WriteLine("UI has Reseted");
+        }
+
         private void URLSDownloader_FormClosed(object sender, FormClosedEventArgs e)
         {
             timetoClose = true;
             FBChoiceListner.Abort();
+            UIUpdayer.Abort();
             //dlListner.Abort();
         }
     }

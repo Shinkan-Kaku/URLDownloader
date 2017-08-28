@@ -14,6 +14,7 @@ namespace URLDownloader
     {
         private RqOrder pack;
         public bool isDlFinished=false;
+        public bool hasStarted = false;
         private int DlTotalPrg;
         private int DlProgress;
 
@@ -21,6 +22,7 @@ namespace URLDownloader
         public UDdler()
         {
             isDlFinished = false;
+            hasStarted = false;
             DlTotalPrg = 0;
             DlProgress = 0;
         }
@@ -29,6 +31,7 @@ namespace URLDownloader
         {
             pack = RO;
             isDlFinished = false;
+            hasStarted = false;
             DlTotalPrg= RO.getAllPageNumber();
             DlProgress =0;
         }
@@ -37,6 +40,7 @@ namespace URLDownloader
         {
             //1-AllUrl 2-FinalPN
             WebClient wc = new WebClient();
+            hasStarted = true;
             switch(method)
             {
                 case 1:
@@ -49,7 +53,6 @@ namespace URLDownloader
                     {
                         //Console.Out.WriteLine("From:" + pack.getURLs(num));
                         //Console.Out.WriteLine("File:" + pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) +"."+ pack.getFileName(2, num));
-                       // wc.DownloadFile("http://blog.darkthread.net/images/darkthreadbanner.gif", "D:\\darkthread.gif");
                         DlProgress++;
                        Console.Out.WriteLine("DlProgress" + DlProgress + "/Total:" + DlTotalPrg);
                        Console.Out.WriteLine(pack.getURLs(num));
