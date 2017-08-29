@@ -28,8 +28,9 @@ namespace URLDownloader
         //private BackgroundWorker backgroundworker;
         bool timetoClose;
         bool Reseted = false;
+        bool UUStandby = true;
 
-        String versionString = "Version "+"B1.53";
+        String versionString = "Version "+"B1.54";
 
         public URLSDownloader()
         {
@@ -95,7 +96,8 @@ namespace URLDownloader
             if(switchONOFF)
             {
                 //background.RunWorkerAsync();
-                if(!Reseted)UIUpdayer.Start();
+                if (!Reseted) { UIUpdayer.Start(); }
+                else{ UUStandby = false; }
             }
             else
             {
@@ -111,7 +113,19 @@ namespace URLDownloader
             
         }
 
+        //updateThread using this methodGroup
         private void updateUI()
+        {
+            subUUProgresspack();
+        }
+        private void subUUProgresspack()
+        {
+            subUpdateUI();
+            chargeBackgroundWorker(false);
+            UUStandby = true;
+            subUUStandby();
+        }
+        private void  subUpdateUI()
         {
             int crtPage = 0;
             while (!(Udler.isDlFinished) && !timetoClose)
@@ -125,7 +139,7 @@ namespace URLDownloader
                     Console.Out.WriteLine("2/" + Convert.ToString(Math.Floor(result)));
                     //inteveneUIwithThread("2/" + Convert.ToString(result));
                     Thread.Sleep(1000);
-                    if(result <=100)
+                    if (result <= 100)
                     {
                         inteveneUIwithThread("2/" + Convert.ToString(Math.Floor(result)));
                     }
@@ -139,12 +153,25 @@ namespace URLDownloader
                 }
 
             }
-            chargeBackgroundWorker(false);
         }
+        private void subUUStandby()
+        {
+            while(UUStandby)
+            {
+                Thread.Sleep(1000);
+            }
+            subUUProgresspack();
+
+        }
+        //--------------------------------------------------------------------------------------------------------
+
+
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
 
         }
+
+        //Build & Sent Request methods
         private void sendRequestOrder()
         {
             RqOrder order;
@@ -211,7 +238,7 @@ namespace URLDownloader
             }
 
         }
-
+        //-----------------------------------------------------------------------------------------------------
 
         private void threadcheckingFBCChoiced()
         {
@@ -557,6 +584,7 @@ namespace URLDownloader
             //TitlettBox.Text = "";
             //FPUrlTtBox.Text = "";
             Udler = new UDdler();
+            //UIUpdayer = new Thread(updateUI);
             Reseted = true;
             Console.Out.WriteLine("UI has Reseted");
         }
