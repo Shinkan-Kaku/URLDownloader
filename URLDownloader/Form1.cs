@@ -30,7 +30,7 @@ namespace URLDownloader
         bool Reseted = false;
         bool UUStandby = true;
 
-        String versionString = "Version "+"B1.54";
+        String versionString = "Version "+"B1.55";
 
         public URLSDownloader()
         {
@@ -96,17 +96,26 @@ namespace URLDownloader
             if(switchONOFF)
             {
                 //background.RunWorkerAsync();
-                if (!Reseted) { UIUpdayer.Start(); }
-                else{ UUStandby = false; }
+                if (!Reseted)
+                {
+                    UIUpdayer.Start();
+                    
+                }
+                else
+                {
+                    UUStandby = false;
+                    inteveneUIwithThread("2/true");
+                    inteveneUIwithThread("2/0");
+                }
             }
             else
             {
                 inteveneUIwithThread("3/Download Request Complete");
                 inteveneUIwithThread("2/false");
-                inteveneUIwithThread("3/You Can Shutdown or Do next Request peacefully");
                 resetUI();
                 Thread.Sleep(3000);
-                
+                inteveneUIwithThread("3/You Can Shutdown or Do next Request peacefully");
+
                 //background.CancelAsync();
                 //background.Dispose();
             }
@@ -484,7 +493,9 @@ namespace URLDownloader
         {
             Address.Enabled = true;
             TitlettBox.Enabled = true;
+            TitlettBox.Text = "";
             FPUrlTtBox.Enabled = true;
+            FPUrlTtBox.Text = "";
             dlRuleCBox.Enabled = true;
             DldataView.Enabled = true;
         }
