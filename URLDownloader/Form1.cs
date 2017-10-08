@@ -30,7 +30,7 @@ namespace URLDownloader
         bool Reseted = false;
         bool UUStandby = true;
 
-        String versionString = "Version "+"B1.55";
+        String versionString = "Version "+"B1.6";
 
         public URLSDownloader()
         {
@@ -261,7 +261,7 @@ namespace URLDownloader
                 {
                     inteveneUIwithThread("0/1"); 
                 }
-               if (requestValueFromUI(1).Equals("FinalEpNum") )
+               if (requestValueFromUI(1).Equals("FinalEpNum")&&DldataView.Rows.Count>0 )
                 {
                     if (Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "^(\\d{1,3})$"))
                     {
@@ -273,8 +273,9 @@ namespace URLDownloader
                     }
 
                 }
-               else if(requestValueFromUI(1).Equals("AllURLs"))
+               else if(requestValueFromUI(1).Equals("AllURLs") && DldataView.Rows.Count > 0)
                 {
+                    //bug
                     if(Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "http(s?)://(([0-9.\\-A-Za-z]+)/)+\\w+.(jpg|png|gif|bmp)"))
                     {
                         inteveneUIwithThread("4/1");
@@ -321,7 +322,7 @@ namespace URLDownloader
             //格式為Num/String
             //Num 指定要改部位
             //string 用在內容物為布林時，當輸數字，大於0為真
-            //0=下載條件確認,1=開始下載按鈕,2=進度條,3=訊息欄,4=資料驗證CB,5=模式選擇CB
+            //0=下載條件確認,1=開始下載按鈕,2=進度條,3=訊息欄,4=資料驗證CB,5=模式選擇CB,6=清空DlDataview
             string[] parsed = code.Split('/');
             bool conver = false;
 
@@ -423,6 +424,34 @@ namespace URLDownloader
                         ModeCB.SelectedIndex = Convert.ToInt16(parsed[1]);
                     }
                     break;
+                case 6:
+                    var clearDldataView = new Action(() => DldataView.Rows.Clear() );
+
+                    if(DldataView.InvokeRequired)
+                    {
+                        DldataView.Invoke(clearDldataView);
+                    }
+                    else
+                    {
+                        DldataView.Rows.Clear();
+                    }
+
+                    break;
+                case 7:
+                    var cleardlRuleCobBoxText = new Action( () => dlRuleCBox.SelectedText="");
+
+                    if(dlRuleCBox.InvokeRequired)
+                    {
+                        dlRuleCBox.Invoke(cleardlRuleCobBoxText);
+                    }
+                    else
+                    {
+                        dlRuleCBox.SelectedText = "";
+                    }
+
+
+                    break;
+
                 default:
                     break;
 
@@ -527,6 +556,7 @@ namespace URLDownloader
             {
                 if (ModeCB.Text.Equals("Normal"))
                 {
+                    addingPage("NextPageURL");
                     BnAddUrlsLog.Enabled = true;
                 }
                 else
@@ -591,12 +621,15 @@ namespace URLDownloader
         private void resetUI()
         {
             inteveneUIwithThread("5/2");
+            inteveneUIwithThread("6/1");
+            inteveneUIwithThread("7/0");
             //dlRuleCBox.SelectedText = "";
             //TitlettBox.Text = "";
             //FPUrlTtBox.Text = "";
             Udler = new UDdler();
             //UIUpdayer = new Thread(updateUI);
             Reseted = true;
+
             Console.Out.WriteLine("UI has Reseted");
         }
 
