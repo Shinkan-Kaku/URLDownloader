@@ -30,7 +30,7 @@ namespace URLDownloader
         bool Reseted = false;
         bool UUStandby = true;
 
-        String versionString = "Version "+"B1.6";
+        String versionString = "Version "+"B1.65";
 
         public URLSDownloader()
         {

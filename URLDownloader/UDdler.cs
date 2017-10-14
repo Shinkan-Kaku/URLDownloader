@@ -17,10 +17,14 @@ namespace URLDownloader
         public bool hasStarted = false;
         private int DlTotalPrg;
         private int DlProgress;
+        private List<String> PicSname = new List<string>();
+        WebClient wc;
+
 
 
         public UDdler()
         {
+            PicSname.AddRange(new string[] {"png","jpg","bmp","gif"});
             isDlFinished = false;
             hasStarted = false;
             DlTotalPrg = 0;
@@ -29,17 +33,18 @@ namespace URLDownloader
 
         public UDdler(RqOrder RO)
         {
+            PicSname.AddRange(new string[] { "png", "jpg", "bmp", "gif" });
             pack = RO;
             isDlFinished = false;
             hasStarted = false;
             DlTotalPrg= RO.getAllPageNumber();
             DlProgress =0;
+            wc = new WebClient();
         }
 
         public void doDownloadMethod(int method,bool isLowSpeedToDebug)
         {
             //1-AllUrl 2-FinalPN
-            WebClient wc = new WebClient();
             hasStarted = true;
             switch(method)
             {
@@ -67,7 +72,7 @@ namespace URLDownloader
                 case 2:
                     checkDirectoryExist(pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
                     DlProgress = 1;
-                    wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2));
+                    downloadConservalty(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2), pack.getTFFileName(2));
                     String toFormat="";
                     for(int tar=0;tar<pack.getTFFileName(1).Length;tar++)
                     {
@@ -84,7 +89,8 @@ namespace URLDownloader
                         DlProgress++;
                         Console.Out.WriteLine("DlProgress" + DlProgress + "/Total:" + DlTotalPrg);
                         Console.Out.WriteLine(WebpageURL + turndNum.ToString(toFormat) + "." + pack.getTFFileName(2));
-                        wc.DownloadFile(WebpageURL + turndNum.ToString(toFormat) +"."+ pack.getTFFileName(2), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) + "." + pack.getTFFileName(2));
+                        Console.Out.WriteLine("using Conservalty Download with subline:"+ pack.getTFFileName(2));
+                        downloadConservalty(WebpageURL + turndNum.ToString(toFormat) + "." + pack.getTFFileName(2), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
                         Thread.Sleep((isLowSpeedToDebug ? 5000 : 1000));
                     }
                     isDlFinished = true;
@@ -93,6 +99,73 @@ namespace URLDownloader
                     break;
             }
             
+        }
+
+        private void downloadConservalty(string address, string filename, string subname)
+        {
+            /*
+             * 進度備留訊:
+             * 需要在下載得到404時,從PicSname抓其他副檔名進行下載
+             * 直到PicSname的內容都失敗,該下載項目便直接跳過
+             * 
+            */
+            List<string> localPSname = PicSname;
+            bool needChangeSubName = false;
+            Console.Out.WriteLine("LocalPSname is Removeable: "+localPSname.Remove(subname));
+            string cuttedSubNamesWebAddress = address.Substring(0,address.LastIndexOf('.')+1);
+            Int16 retryTimes = 0;
+            bool retrySuccessed = false;
+            try
+            {
+                wc.DownloadFile(cuttedSubNamesWebAddress+ subname, filename);
+            }
+            catch (WebException we)
+            {
+                HttpWebResponse errorResponse = we.Response as HttpWebResponse;
+                if (errorResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    needChangeSubName = true;
+                }
+            }
+            
+            while(needChangeSubName&&!(retrySuccessed))
+            {
+
+                if(retryTimes<=2)
+                {
+                    try
+                    {
+                        Console.Out.WriteLine("retring using subname:" + localPSname[retryTimes]);
+                        wc.DownloadFile(cuttedSubNamesWebAddress + localPSname[retryTimes], filename);
+                        retrySuccessed = true;
+                    }
+                    catch (WebException we)
+                    {
+                        HttpWebResponse errorResponse = we.Response as HttpWebResponse;
+                        if (errorResponse.StatusCode == HttpStatusCode.NotFound)
+                        {
+                            retryTimes++;
+                        }
+                    }
+                    finally
+                    {
+                        if(retryTimes>2)
+                        {
+                            needChangeSubName = false;
+                        }
+                    }
+                }
+                else
+                {
+                    needChangeSubName = false;
+                }
+
+
+
+            }
+
+
+
         }
         public int getTotalPageNum()
         {
