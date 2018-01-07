@@ -15,8 +15,10 @@ namespace URLDownloader
         private RqOrder pack;
         public bool isDlFinished=false;
         public bool hasStarted = false;
+        
         private int DlTotalPrg;
         private int DlProgress;
+        private int StartNum=1;
         private List<String> PicSname = new List<string>();
         WebClient wc;
 
@@ -46,22 +48,61 @@ namespace URLDownloader
         {
             //1-AllUrl 2-FinalPN
             hasStarted = true;
-            switch(method)
+            int targetNum=0;
+            int SupNum = 0;//跨檔數,限supplement下載模式使用
+            switch (method)
             {
                 case 1:
                     checkDirectoryExist(pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
-                    DlProgress = 1;
-                    Console.Out.WriteLine(pack.getFirstPageUrl());
-                    wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2));
+                    DlProgress = 0;
 
-                    for (int num = 1;num<pack.getAllPageNumber();num++ )
+                    /*
+                     * 附註:請確認好用做檢查目標原尾數的目標資料夾是否存在、該資料夾內部是否存在可轉成INT的檔案名
+                     */
+                    if(pack.getIssupplement())
+                    {
+
+                        String [] targetDLArray = Directory.GetFiles(pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
+                        List<String> targetDyList = targetDLArray.ToList();
+                        targetDyList.Sort();
+
+                        Console.Out.WriteLine("Bese on supplementMode ,we get the SuoNum : "+ targetDyList[targetDyList.Count - 1]);
+                        SupNum = Convert.ToInt16(Path.GetFileName(targetDyList[targetDyList.Count - 1]).Split('.')[0]);
+                        targetNum = pack.getAllPageNumber()-1;
+                        Console.Out.WriteLine(pack.getFirstPageUrl());
+                        wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(StartNum+SupNum) + "." + pack.getTFFileName(2));
+                    }
+                    else
+                    {
+                        targetNum = pack.getAllPageNumber()-1   ;
+                        Console.Out.WriteLine(pack.getFirstPageUrl());
+                        wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2));
+                    }
+
+
+
+                    StartNum = 0;
+                    for (int num = StartNum; num<targetNum; num++ )
                     {
                         //Console.Out.WriteLine("From:" + pack.getURLs(num));
                         //Console.Out.WriteLine("File:" + pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) +"."+ pack.getFileName(2, num));
                         DlProgress++;
-                       Console.Out.WriteLine("DlProgress" + DlProgress + "/Total:" + DlTotalPrg);
-                       Console.Out.WriteLine(pack.getURLs(num));
-                        wc.DownloadFile(pack.getURLs(num), pack.getPath()+"\\"+pack.getTitleFileName() +"\\"+ Convert.ToString(num+1)+"."+pack.getFileName(2,num));
+                       Console.Out.WriteLine("DlProgress" + DlProgress + "/Total:" + DlTotalPrg + "/Num:" + num);
+                       
+
+                        if(pack.getIssupplement())
+                        {
+                            wc.DownloadFile(pack.getURLs(num), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num + 1+SupNum) + "." + pack.getFileName(2, num));
+                            Console.Out.WriteLine(pack.getURLs(num));
+                        }
+                        else
+                        {
+                            wc.DownloadFile(pack.getURLs(num), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num + 1) + "." + pack.getFileName(2, num));
+                            Console.Out.WriteLine(pack.getURLs(num));
+                        }
+
+
+                        
                         //Console.Out.WriteLine((decimal)DlProgress / (decimal)DlTotalPrg);
                         //Console.Out.WriteLine("Progress:" + Convert.ToString((100.0*(DlProgress/DlTotalPrg)))); 
                         Thread.Sleep((isLowSpeedToDebug? 5000:1000));
@@ -72,17 +113,39 @@ namespace URLDownloader
                 case 2:
                     checkDirectoryExist(pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
                     DlProgress = 1;
-                    downloadConservalty(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2), pack.getTFFileName(2));
+
+                    if (pack.getIssupplement())
+                    {
+                        String[] targetDLArray = Directory.GetFiles(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
+                        List<String> targetDyList = targetDLArray.ToList();
+                        targetDyList.Sort();
+
+                        StartNum = Convert.ToInt16(targetDyList[targetDyList.Count - 1])+1;
+                        targetNum = StartNum + Convert.ToInt16(pack.getURLs(0));
+
+                        downloadConservalty(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(StartNum) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
+
+                    }
+                    else
+                    {
+                        StartNum = Convert.ToInt16(pack.getTFFileName(1));
+                        targetNum = Convert.ToInt16(pack.getURLs(0));
+
+                        downloadConservalty(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(StartNum) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
+                    }
+
+                    
+
+                    //
                     String toFormat="";
                     for(int tar=0;tar<pack.getTFFileName(1).Length;tar++)
                     {
                         toFormat += "0";
                     }
 
-                    int startPage = Convert.ToInt16(pack.getTFFileName(1));
-                    int finalPNum = Convert.ToInt16(pack.getURLs(0));
+
                     string WebpageURL = pack.getFirstPageUrl().Substring(0, pack.getFirstPageUrl().LastIndexOf('/')+1);
-                    for (int num = startPage+1; num <=finalPNum; num++)
+                    for (int num = StartNum + 1; num <= targetNum; num++)
                     {
 
                         decimal turndNum = Convert.ToDecimal(num);
@@ -103,12 +166,7 @@ namespace URLDownloader
 
         private void downloadConservalty(string address, string filename, string subname)
         {
-            /*
-             * 進度備留訊:
-             * 需要在下載得到404時,從PicSname抓其他副檔名進行下載
-             * 直到PicSname的內容都失敗,該下載項目便直接跳過
-             * 
-            */
+
             List<string> localPSname = PicSname;
             bool needChangeSubName = false;
             Console.Out.WriteLine("LocalPSname is Removeable: "+localPSname.Remove(subname));

@@ -112,7 +112,9 @@
             this.dlRuleCBox.FormattingEnabled = true;
             this.dlRuleCBox.Items.AddRange(new object[] {
             resources.GetString("dlRuleCBox.Items"),
-            resources.GetString("dlRuleCBox.Items1")});
+            resources.GetString("dlRuleCBox.Items1"),
+            resources.GetString("dlRuleCBox.Items2"),
+            resources.GetString("dlRuleCBox.Items3")});
             this.dlRuleCBox.Name = "dlRuleCBox";
             this.dlRuleCBox.SelectedIndexChanged += new System.EventHandler(this.dlRuleCBox_SelectedIndexChanged);
             // 

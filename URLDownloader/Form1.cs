@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.IO;
 
 delegate void SetTextCallback(string text);
 delegate string GetTextCallback();
@@ -24,13 +25,12 @@ namespace URLDownloader
         Thread FBChoiceListner;
         Thread Uldlworker;
         Thread UIUpdayer;
-        //BackgroundWorker background;
-        //private BackgroundWorker backgroundworker;
+        Thread TitleChecker;
         bool timetoClose;
         bool Reseted = false;
         bool UUStandby = true;
 
-        String versionString = "Version "+"B1.65";
+        String versionString = "Version " + "B1.65";
 
         public URLSDownloader()
         {
@@ -39,7 +39,10 @@ namespace URLDownloader
             Udler = new UDdler();
             timetoClose = false;
             FBChoiceListner = new Thread(threadcheckingFBCChoiced);
+            TitleChecker = new Thread(threadingTitleCheck);
             FBChoiceListner.Start();
+            TitleChecker.Start();
+            
 
             UIUpdayer = new Thread(updateUI);
 
@@ -48,7 +51,7 @@ namespace URLDownloader
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void Address_Click(object sender, EventArgs e)
@@ -83,7 +86,7 @@ namespace URLDownloader
                     break;
             }
 
-            
+
         }
         public void typeMessageToTtBox(String s)
         {
@@ -93,13 +96,13 @@ namespace URLDownloader
 
         private void chargeBackgroundWorker(bool switchONOFF)
         {
-            if(switchONOFF)
+            if (switchONOFF)
             {
                 //background.RunWorkerAsync();
                 if (!Reseted)
                 {
                     UIUpdayer.Start();
-                    
+
                 }
                 else
                 {
@@ -119,7 +122,7 @@ namespace URLDownloader
                 //background.CancelAsync();
                 //background.Dispose();
             }
-            
+
         }
 
         //updateThread using this methodGroup
@@ -134,7 +137,7 @@ namespace URLDownloader
             UUStandby = true;
             subUUStandby();
         }
-        private void  subUpdateUI()
+        private void subUpdateUI()
         {
             int crtPage = 0;
             while (!(Udler.isDlFinished) && !timetoClose)
@@ -165,7 +168,7 @@ namespace URLDownloader
         }
         private void subUUStandby()
         {
-            while(UUStandby)
+            while (UUStandby)
             {
                 Thread.Sleep(1000);
             }
@@ -184,9 +187,9 @@ namespace URLDownloader
         private void sendRequestOrder()
         {
             RqOrder order;
-            string v1=TitlettBox.Text;
+            string v1 = TitlettBox.Text;
             string v2 = FPUrlTtBox.Text;
-            string v3=FBDialog1.SelectedPath;
+            string v3 = FBDialog1.SelectedPath;
             //Thread.Sleep(3000);
             switch (Convert.ToInt16(requestValueFromUI(0)))
             {
@@ -197,6 +200,12 @@ namespace URLDownloader
                     Udler.doDownloadMethod(2, false);
                     break;
                 case 1:
+                    order = new RqOrder(v1, v2, v3, RqOrder.BASE_ON_FINAL_EPNUM,true);
+                    order.addURLs(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue));
+                    Udler = new UDdler(order);
+                    Udler.doDownloadMethod(2, false);
+                    break;
+                case 2:
                     order = new RqOrder(v1, v2, v3, RqOrder.BASE_ON_ALL_PAGEURL);
                     for (int CrtNum = 0; CrtNum < DldataView.Rows.Count; CrtNum++)
                     {
@@ -205,8 +214,15 @@ namespace URLDownloader
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(1, false);
                     break;
+                case 3:
+                    order = new RqOrder(v1, v2, v3, RqOrder.BASE_ON_ALL_PAGEURL,true);
+                    order.addURLs(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue));
+                    Udler = new UDdler(order);
+                    Udler.doDownloadMethod(2, false);
+                    break;
                 default:
                     inteveneUIwithThread("3/ERROR Rising On DownloadRule");
+                    Console.Out.WriteLine("We get Download Rule Value: "+ requestValueFromUI(0));
                     break;
             }
 
@@ -214,10 +230,10 @@ namespace URLDownloader
         }
         private void sendExampleRequestOrder()
         {
-            string[] exam = { "debugful", "http://w6.loxa.edu.tw/a13302001/000.png","", "3" };
+            string[] exam = { "debugful", "http://w6.loxa.edu.tw/a13302001/000.png", "", "3" };
             exam[2] = FBDialog1.SelectedPath;
             RqOrder order;
-            
+
             Console.Out.WriteLine("BackgroundWorker has Charged");
             inteveneUIwithThread("3/BackgroundWorker has Charged");
             switch (Convert.ToInt16(requestValueFromUI(0)))
@@ -226,23 +242,43 @@ namespace URLDownloader
                     order = new RqOrder(exam[0], exam[1], exam[2], RqOrder.BASE_ON_FINAL_EPNUM);
                     order.addURLs(exam[3]);
                     Udler = new UDdler(order);
-                    Udler.doDownloadMethod(2,true);
+                    Udler.doDownloadMethod(2, true);
                     Console.Out.WriteLine("Download Request has Send");
                     Thread.Sleep(5000);
                     break;
                 case 1:
+                    order = new RqOrder(exam[0], exam[1], exam[2], RqOrder.BASE_ON_FINAL_EPNUM,true);
+                    order.addURLs(exam[3]);
+                    Udler = new UDdler(order);
+                    Udler.doDownloadMethod(2, true);
+                    Console.Out.WriteLine("Download Request has Send");
+                    Thread.Sleep(5000);
+                    break;
+                case 2:
                     order = new RqOrder(exam[0], exam[1], exam[2], RqOrder.BASE_ON_ALL_PAGEURL);
-                    for (int num = 1;num<=Convert.ToInt16(exam[3]);num++ )
+                    for (int num = 1; num <= Convert.ToInt16(exam[3]); num++)
                     {
                         order.addURLs("http://w6.loxa.edu.tw/a13302001/00" + Convert.ToString(num) + ".png");
                     }
                     Udler = new UDdler(order);
-                    Udler.doDownloadMethod(1,true);
+                    Udler.doDownloadMethod(1, true);
+                    Console.Out.WriteLine("Download Request has Send");
+                    Thread.Sleep(5000);
+                    break;
+                case 3:
+                    order = new RqOrder(exam[0], exam[1], exam[2], RqOrder.BASE_ON_ALL_PAGEURL,true);
+                    for (int num = 1; num <= Convert.ToInt16(exam[3]); num++)
+                    {
+                        order.addURLs("http://w6.loxa.edu.tw/a13302001/00" + Convert.ToString(num) + ".png");
+                    }
+                    Udler = new UDdler(order);
+                    Udler.doDownloadMethod(1, true);
                     Console.Out.WriteLine("Download Request has Send");
                     Thread.Sleep(5000);
                     break;
                 default:
                     inteveneUIwithThread("3/ERROR Rising On DownloadRule");
+                    Console.Out.WriteLine("We get Download Rule Value: " + requestValueFromUI(0));
                     break;
             }
 
@@ -251,7 +287,7 @@ namespace URLDownloader
 
         private void threadcheckingFBCChoiced()
         {
-            while(!(timetoClose))
+            while (!(timetoClose))
             {
                 if (string.IsNullOrEmpty(FBDialog1.SelectedPath))
                 {
@@ -259,8 +295,65 @@ namespace URLDownloader
                 }
                 else
                 {
-                    inteveneUIwithThread("0/1"); 
+                    inteveneUIwithThread("0/1");
                 }
+
+                if (DldataView.Rows.Count > 0)
+                {
+                    switch (requestValueFromUI(1))
+                    {
+                        case "FinalEpNum":
+                            if (Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "^(\\d{1,3})$"))
+                            {
+                                inteveneUIwithThread("4/1");
+                            }
+                            else
+                            {
+                                inteveneUIwithThread("4/0");
+                            }
+                            break;
+                        case "AllURLs":
+                            if (Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "http(s?)://(([0-9.\\-A-Za-z]+)/)+\\w+.(jpg|png|gif|bmp)"))
+                            {
+                                inteveneUIwithThread("4/1");
+                            }
+                            else
+                            {
+                                inteveneUIwithThread("4/0");
+                            }
+                            break;
+                        case "FEN_Supplement":
+                            if (Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "^(\\d{1,3})$"))
+                            {
+                                inteveneUIwithThread("4/1");
+                            }
+                            else
+                            {
+                                inteveneUIwithThread("4/0");
+                            }
+
+
+                            break;
+                        case "AU_Supplement":
+                            if (Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "http(s?)://(([0-9.\\-A-Za-z]+)/)+\\w+.(jpg|png|gif|bmp)"))
+                            {
+                                inteveneUIwithThread("4/1");
+                            }
+                            else
+                            {
+                                inteveneUIwithThread("4/0");
+                            }
+
+                            break;
+                        default:
+                            inteveneUIwithThread("4/0");
+                            break;
+
+                    }
+                }
+
+
+                /*
                if (requestValueFromUI(1).Equals("FinalEpNum")&&DldataView.Rows.Count>0 )
                 {
                     if (Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "^(\\d{1,3})$"))
@@ -285,15 +378,16 @@ namespace URLDownloader
                         inteveneUIwithThread("4/0");
                     }
                 }
+               */
 
 
-                if (DlPathCdtCB.Checked && TitleCdtCB.Checked && FPUrlCdtCB.Checked&& ListvcdtCB.Checked)
+                if (DlPathCdtCB.Checked && TitleCdtCB.Checked && FPUrlCdtCB.Checked && ListvcdtCB.Checked)
                 {
-                    if(Udler.isDlFinished==false&&Udler.hasStarted)
+                    if (Udler.isDlFinished == false && Udler.hasStarted)
                     {
                         inteveneUIwithThread("1/0");
                     }
-                    else if(Udler.isDlFinished==false&&Udler.hasStarted==false)
+                    else if (Udler.isDlFinished == false && Udler.hasStarted == false)
                     {
                         inteveneUIwithThread("1/1");
                     }
@@ -301,14 +395,98 @@ namespace URLDownloader
                     {
                         inteveneUIwithThread("1/1");
                     }
-                    
+
                 }
                 else
                 {
-                    inteveneUIwithThread("1/0"); 
+                    inteveneUIwithThread("1/0");
                 }
 
             }
+        }
+        private void threadingTitleCheck()
+        {
+            while (!(timetoClose))
+            {
+                if (string.IsNullOrEmpty(requestValueFromUI(1)) || string.IsNullOrEmpty(requestValueFromUI(3)))
+                {
+                    inteveneUIwithThread("8/0");
+                    Console.Out.WriteLine("ModeCB Or dlRuleCB is Null");
+                    Console.Out.WriteLine("ModeCB:" + requestValueFromUI(1) + "DlRuleCB" + requestValueFromUI(3));
+                }
+                else
+                {
+                    switch (requestValueFromUI(1))
+                    {
+                        case "FinalEpNum":
+                            if (!requestValueFromUI(2).Equals("") && requestValueFromUI(2) != null && !(Regex.IsMatch(requestValueFromUI(2), ".*(\\^|\\?|\\*|<|\"|:|>|\\\\|/)+.*")))
+                            {
+                                inteveneUIwithThread("8/1");
+                            }
+                            else
+                            {
+                                if (Regex.IsMatch(requestValueFromUI(2), ".*(\\^|\\?|\\*|<|\"|:|>|\\\\|/)+.*"))
+                                {
+                                    typeMessageToTtBox("Error : illegal symbols is not allowed!");
+                                    inteveneUIwithThread("9/ ");
+                                }
+
+                                inteveneUIwithThread("8/0");
+                            }
+                            break;
+                        case "AllURLs":
+                            if (!requestValueFromUI(2).Equals("") && requestValueFromUI(2) != null && !(Regex.IsMatch(requestValueFromUI(2), ".*(\\^|\\?|\\*|<|\"|:|>|\\\\|/)+.*")))
+                            {
+                                inteveneUIwithThread("8/1");
+                            }
+                            else
+                            {
+                                if (Regex.IsMatch(requestValueFromUI(2), ".*(\\^|\\?|\\*|<|\"|:|>|\\\\|/)+.*"))
+                                {
+                                    typeMessageToTtBox("Error : illegal symbols is not allowed!");
+                                    inteveneUIwithThread("9/ ");
+                                }
+
+                                inteveneUIwithThread("8/0");
+                            }
+                            break;
+                        case "FEN_Supplement":
+                            if (!string.IsNullOrEmpty(FBDialog1.SelectedPath))
+                            {
+                                if (Directory.Exists(FBDialog1.SelectedPath + "//" + requestValueFromUI(2)))
+                                {
+                                    inteveneUIwithThread("8/1");
+                                }
+                                else
+                                {
+                                    inteveneUIwithThread("8/0");
+                                }
+                            }
+                            break;
+                        case "AU_Supplement":
+                            if (!string.IsNullOrEmpty(FBDialog1.SelectedPath))
+                            {
+                                if (Directory.Exists(FBDialog1.SelectedPath + "//" + requestValueFromUI(2)))
+                                {
+                                    inteveneUIwithThread("8/1");
+                                }
+                                else
+                                {
+                                    inteveneUIwithThread("8/0");
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+
+
+
+
+
+                    }
+                }
+            }
+
         }
         private void threadingDownloadWork()
         {
@@ -322,71 +500,74 @@ namespace URLDownloader
             //格式為Num/String
             //Num 指定要改部位
             //string 用在內容物為布林時，當輸數字，大於0為真
-            //0=下載條件確認,1=開始下載按鈕,2=進度條,3=訊息欄,4=資料驗證CB,5=模式選擇CB,6=清空DlDataview
-            string[] parsed = code.Split('/');
-            bool conver = false;
+            //0=下載條件確認,1=開始下載按鈕,2=進度條,3=訊息欄,4=資料驗證CB,5=模式選擇CB,6=清空DlDataview,7=重設所選dl模式,8=系列名驗證CB
 
-            switch (Convert.ToInt16(parsed[0]))
+            if (!timetoClose)
             {
-                case 0 :
-                    conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
-                    var checkDlPathCdtCB = new Action(() => DlPathCdtCB.Checked = conver);
-                    if(DlPathCdtCB.InvokeRequired)
-                    {
-                        DlPathCdtCB.Invoke(checkDlPathCdtCB);
-                    }
-                    else
-                    {
-                        DlPathCdtCB.Checked = true;
-                    }
-                    break;
-                case 1 :
-                    conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
-                    var setButton = new Action(() => initButton.Enabled = conver);
-                    if(initButton.InvokeRequired)
-                    {
-                        initButton.Invoke(setButton);
-                    }
-                    else
-                    { 
-                        initButton.Enabled=conver;
-                        Console.Out.WriteLine(conver);
-                    }
-                    break;
-                case 2:
+                string[] parsed = code.Split('/');
+                bool conver = false;
 
-                    if (parsed[1].Equals("true") || parsed[1].Equals("false"))
-                    {
-                        conver = (parsed[1].Equals("true")) ? true : false;
-                        var setProbar1Visable = new Action(() => progressBar1.Visible = conver);
-
-                        if(progressBar1.InvokeRequired)
+                switch (Convert.ToInt16(parsed[0]))
+                {
+                    case 0:
+                        conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
+                        var checkDlPathCdtCB = new Action(() => DlPathCdtCB.Checked = conver);
+                        if (DlPathCdtCB.InvokeRequired)
                         {
-                            progressBar1.Invoke(setProbar1Visable);
+                            DlPathCdtCB.Invoke(checkDlPathCdtCB);
                         }
                         else
                         {
-                            progressBar1.Visible = conver;
+                            DlPathCdtCB.Checked = true;
                         }
-
-                    }
-                    else
-                    {
-                        var setprogress = new Action(() => progressBar1.Value = Convert.ToInt16(parsed[1]));
-                        var updateprogrssbar = new Action(() => progressBar1.Update());
-                        if (progressBar1.InvokeRequired)
+                        break;
+                    case 1:
+                        conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
+                        var setButton = new Action(() => initButton.Enabled = conver);
+                        if (initButton.InvokeRequired)
                         {
-                            progressBar1.Invoke(setprogress);
-                            progressBar1.Invoke(updateprogrssbar);
+                            initButton.Invoke(setButton);
                         }
                         else
                         {
-                            progressBar1.Value = Convert.ToInt16(parsed[1]);
-                            progressBar1.Update();
+                            initButton.Enabled = conver;
+                            Console.Out.WriteLine(conver);
                         }
-                    }
-                    break;
-                case 3:
+                        break;
+                    case 2:
+
+                        if (parsed[1].Equals("true") || parsed[1].Equals("false"))
+                        {
+                            conver = (parsed[1].Equals("true")) ? true : false;
+                            var setProbar1Visable = new Action(() => progressBar1.Visible = conver);
+
+                            if (progressBar1.InvokeRequired)
+                            {
+                                progressBar1.Invoke(setProbar1Visable);
+                            }
+                            else
+                            {
+                                progressBar1.Visible = conver;
+                            }
+
+                        }
+                        else
+                        {
+                            var setprogress = new Action(() => progressBar1.Value = Convert.ToInt16(parsed[1]));
+                            var updateprogrssbar = new Action(() => progressBar1.Update());
+                            if (progressBar1.InvokeRequired)
+                            {
+                                progressBar1.Invoke(setprogress);
+                                progressBar1.Invoke(updateprogrssbar);
+                            }
+                            else
+                            {
+                                progressBar1.Value = Convert.ToInt16(parsed[1]);
+                                progressBar1.Update();
+                            }
+                        }
+                        break;
+                    case 3:
                         var writeLineTpTtbox = new Action(() => rTBox.Text += "\r\n");
                         var typeMessagesToTtbox = new Action(() => rTBox.Text += parsed[1]);
                         if (rTBox.InvokeRequired)
@@ -398,106 +579,169 @@ namespace URLDownloader
                         {
                             typeMessageToTtBox(parsed[1]);
                         }
-                    break;
-                case 4:
-                    conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
-                    var checkListvcdtCB = new Action(() => ListvcdtCB.Checked = conver);
-                    if(ListvcdtCB.InvokeRequired)
-                    {
-                        ListvcdtCB.Invoke(checkListvcdtCB);
-                    }
-                    else
-                    {
-                        ListvcdtCB.Checked = conver;
-                    }
-                    break;
-                case 5:
+                        break;
+                    case 4:
+                        conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
+                        var checkListvcdtCB = new Action(() => ListvcdtCB.Checked = conver);
+                        if (ListvcdtCB.InvokeRequired)
+                        {
+                            ListvcdtCB.Invoke(checkListvcdtCB);
+                        }
+                        else
+                        {
+                            ListvcdtCB.Checked = conver;
+                        }
+                        break;
+                    case 5:
 
-                    var switchModeCB = new Action(() => ModeCB.SelectedIndex = Convert.ToInt16(parsed[1]));
+                        var switchModeCB = new Action(() => ModeCB.SelectedIndex = Convert.ToInt16(parsed[1]));
 
-                    if(ModeCB.InvokeRequired)
-                    {
-                        ModeCB.Invoke(switchModeCB);
-                    }
-                    else
-                    {
-                        ModeCB.SelectedIndex = Convert.ToInt16(parsed[1]);
-                    }
-                    break;
-                case 6:
-                    var clearDldataView = new Action(() => DldataView.Rows.Clear() );
+                        if (ModeCB.InvokeRequired)
+                        {
+                            ModeCB.Invoke(switchModeCB);
+                        }
+                        else
+                        {
+                            ModeCB.SelectedIndex = Convert.ToInt16(parsed[1]);
+                        }
+                        break;
+                    case 6:
+                        var clearDldataView = new Action(() => DldataView.Rows.Clear());
 
-                    if(DldataView.InvokeRequired)
-                    {
-                        DldataView.Invoke(clearDldataView);
-                    }
-                    else
-                    {
-                        DldataView.Rows.Clear();
-                    }
+                        if (DldataView.InvokeRequired)
+                        {
+                            DldataView.Invoke(clearDldataView);
+                        }
+                        else
+                        {
+                            DldataView.Rows.Clear();
+                        }
 
-                    break;
-                case 7:
-                    var cleardlRuleCobBoxText = new Action( () => dlRuleCBox.SelectedText="");
+                        break;
+                    case 7:
+                        var cleardlRuleCobBoxText = new Action(() => dlRuleCBox.SelectedText = "");
 
-                    if(dlRuleCBox.InvokeRequired)
-                    {
-                        dlRuleCBox.Invoke(cleardlRuleCobBoxText);
-                    }
-                    else
-                    {
-                        dlRuleCBox.SelectedText = "";
-                    }
-
-
-                    break;
-
-                default:
-                    break;
+                        if (dlRuleCBox.InvokeRequired)
+                        {
+                            dlRuleCBox.Invoke(cleardlRuleCobBoxText);
+                        }
+                        else
+                        {
+                            dlRuleCBox.SelectedText = "";
+                        }
 
 
+                        break;
+                    case 8:
+                        conver = Convert.ToInt16(parsed[1]) > 0 ? true : false;
+                        var setTitleVaildConditionCB = new Action(() => TitleCdtCB.Checked = conver);
+
+                        if (TitleCdtCB.InvokeRequired)
+                        {
+                            TitleCdtCB.Invoke(setTitleVaildConditionCB);
+                        }
+                        else
+                        {
+                            TitleCdtCB.Checked = conver;
+                        }
+
+                        break;
+                    case 9:
+                        var setTitleTTBoxToValue = new Action(() => TitlettBox.Text = parsed[1]);
+
+                        if (TitlettBox.InvokeRequired)
+                        {
+                            TitlettBox.Invoke(setTitleTTBoxToValue);
+                        }
+                        else
+                        {
+                            TitlettBox.Text = parsed[1];
+                        }
+
+                        break;
+                    default:
+                        break;
 
 
+
+
+                }
             }
         
         }
         private string requestValueFromUI(Int16 index)
         {
-            switch(index)
+            if (!timetoClose)
             {
-                case 0:
-                    if(dlRuleCBox.InvokeRequired)
-                    {
-                        string getted="";
-                        var tasktoInvoke = new Action(()=>getted = Convert.ToString(dlRuleCBox.SelectedIndex) );
-                        dlRuleCBox.Invoke(tasktoInvoke);
 
-                        return getted;
-                    }
-                    else
-                    {
-                        return Convert.ToString(dlRuleCBox.SelectedIndex);
-                    }
-                    
-                    break;
-                case 1:
-                    if (dlRuleCBox.InvokeRequired)
-                    {
-                        string getted = "";
-                        var tasktoInvoke = new Action(() => getted = Convert.ToString(dlRuleCBox.Text));
-                        dlRuleCBox.Invoke(tasktoInvoke);
+                switch (index)
+                {
+                    case 0:
+                        if (dlRuleCBox.InvokeRequired)
+                        {
+                            string getted = "";
+                            var tasktoInvoke = new Action(() => getted = Convert.ToString(dlRuleCBox.SelectedIndex));
+                            dlRuleCBox.Invoke(tasktoInvoke);
 
-                        return getted;
-                    }
-                    else
-                    {
-                        return Convert.ToString(dlRuleCBox.Text);
-                    }
-                    return "";
-                    break;
-                default:
-                    return "";
-                    break;
+                            return getted;
+                        }
+                        else
+                        {
+                            return Convert.ToString(dlRuleCBox.SelectedIndex);
+                        }
+
+                        break;
+                    case 1:
+                        if (dlRuleCBox.InvokeRequired)
+                        {
+                            string getted = "";
+                            var tasktoInvoke = new Action(() => getted = Convert.ToString(dlRuleCBox.Text));
+                            dlRuleCBox.Invoke(tasktoInvoke);
+
+                            return getted;
+                        }
+                        else
+                        {
+                            return Convert.ToString(dlRuleCBox.Text);
+                        }
+                        return "";
+                        break;
+                    case 2:
+                        if (TitlettBox.InvokeRequired)
+                        {
+                            string getted = "";
+                            var tasktoInboke = new Action(() => getted = Convert.ToString(TitlettBox.Text));
+                            TitlettBox.Invoke(tasktoInboke);
+
+                            return getted;
+                        }
+                        else
+                        {
+                            return Convert.ToString(TitlettBox);
+                        }
+                        break;
+                    case 3:
+                        if (ModeCB.InvokeRequired)
+                        {
+                            string getted = "";
+                            var tasktoInvoke = new Action(() => getted = Convert.ToString(ModeCB.Text));
+                            dlRuleCBox.Invoke(tasktoInvoke);
+
+                            return getted;
+                        }
+                        else
+                        {
+                            return ModeCB.SelectedText;
+                        }
+                        break;
+                    default:
+                        return "";
+                        break;
+                }
+            }
+            else
+            {
+                return "";
             }
         }
 
@@ -532,13 +776,13 @@ namespace URLDownloader
         {
             dlRuleCBox.Enabled = true;
             Address.Enabled = true;
-            TitlettBox.Text = "debug.png";
+            TitlettBox.Text = "debugful";
             FPUrlTtBox.Text = "http://w6.loxa.edu.tw/a13302001/000.png";
         }
 
         private void dlRuleCBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(dlRuleCBox.Text.Equals("FinalEpNum"))
+            if(dlRuleCBox.Text.Equals("FinalEpNum")||dlRuleCBox.Text.Equals("FEN_Supplement"))
             {
                 
                 if (ModeCB.Text.Equals("Normal"))
@@ -575,20 +819,14 @@ namespace URLDownloader
 
         private void TitlettBox_TextChanged(object sender, EventArgs e)
         {
-            if(!TitlettBox.Text.Equals("")&&TitlettBox.Text!=null&&!(Regex.IsMatch(TitlettBox.Text, ".*(\\^|\\?|\\*|<|\"|:|>|\\\\|/)+.*")))
-            {
-                TitleCdtCB.Checked = true;
-            }
-            else
-            {
-                if(Regex.IsMatch(TitlettBox.Text, ".*(\\^|\\?|\\*|<|\"|:|>|\\\\|/)+.*"))
-                {
-                    typeMessageToTtBox("Error : illegal symbols is not allowed!");
-                    TitlettBox.Text = "";
-                }
 
-                TitleCdtCB.Checked = false;
-            }
+
+
+
+
+
+
+
         }
 
         private void FPUrlTtBox_TextChanged(object sender, EventArgs e)
@@ -638,6 +876,8 @@ namespace URLDownloader
             timetoClose = true;
             FBChoiceListner.Abort();
             UIUpdayer.Abort();
+            TitleChecker.Abort();
+
             //dlListner.Abort();
         }
     }

@@ -12,6 +12,9 @@ namespace URLDownloader
         private String Page1URl;
         private String Download_Path;
         private bool ROType;
+
+        private bool isSupplementForSameSeries = false;
+
         public static bool BASE_ON_ALL_PAGEURL = true;
         public static bool BASE_ON_FINAL_EPNUM = false;
         private  List<String> URLs;
@@ -22,6 +25,20 @@ namespace URLDownloader
             Download_Path = DPath;
             ROType = dlRule;
             URLs = new List<String>();
+        }
+        public RqOrder(String STitle, String P1Url, String DPath, bool dlRule,bool isSupplement)
+        {
+            isSupplementForSameSeries = isSupplement;
+            Seris_Title = STitle;
+            Page1URl = P1Url;
+            Download_Path = DPath;
+            ROType = dlRule;
+            URLs = new List<String>();
+        }
+
+        public bool getIssupplement()
+        {
+            return isSupplementForSameSeries;
         }
 
         public void addURLs(String Url)
@@ -35,6 +52,7 @@ namespace URLDownloader
         }
         public String getURLs(int index)
         {
+            Console.Out.WriteLine("Output limit is "+URLs.Count+" and Current Request :"+index);
             return URLs[index];
         }
         public String getTitleFileName()
