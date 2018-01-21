@@ -50,6 +50,7 @@ namespace URLDownloader
             hasStarted = true;
             int targetNum=0;
             int SupNum = 0;//跨檔數,限supplement下載模式使用
+            sendDebugMSGToConsole("Selected Download Mode : "+Convert.ToString(method));
             switch (method)
             {
                 case 1:
@@ -63,19 +64,31 @@ namespace URLDownloader
                     {
 
                         String [] targetDLArray = Directory.GetFiles(pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
-                        List<String> targetDyList = targetDLArray.ToList();
-                        targetDyList.Sort();
 
-                        Console.Out.WriteLine("Bese on supplementMode ,we get the SuoNum : "+ targetDyList[targetDyList.Count - 1]);
-                        SupNum = Convert.ToInt16(Path.GetFileName(targetDyList[targetDyList.Count - 1]).Split('.')[0]);
+                        //List<String> targetDyList = targetDLArray.ToList();
+                        List<String> targetDyList = new List<string>();
+                        for (int Cnum = 0; Cnum < targetDLArray.Length; Cnum++)
+                        {
+                            targetDyList.Add(Path.GetFileName(targetDLArray[Cnum]).Split('.')[0]);
+                        }
+
+                        targetDyList.Sort(new CustomNumericComparer());
+
+                        sendDebugMSGToConsole("Bese on supplementMode ,we get the SuoNum : "+ targetDyList[targetDyList.Count - 1]);
+
+                        sendDebugMSGToConsole("Last Numeric Filename :"+SupNum);
+                        //SupNum = Convert.ToInt16(Path.GetFileName(targetDyList[targetDyList.Count - 1]).Split('.')[0]);
+                        SupNum = Convert.ToInt16(targetDyList[targetDyList.Count - 1])+1;
                         targetNum = pack.getAllPageNumber()-1;
-                        Console.Out.WriteLine(pack.getFirstPageUrl());
+                        sendDebugMSGToConsole(pack.getFirstPageUrl());
+                        sendDebugMSGToConsole("File will be saved as :"+ Convert.ToString(StartNum + SupNum) + "." + pack.getTFFileName(2));
                         wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(StartNum+SupNum) + "." + pack.getTFFileName(2));
                     }
                     else
                     {
                         targetNum = pack.getAllPageNumber()-1   ;
-                        Console.Out.WriteLine(pack.getFirstPageUrl());
+                        sendDebugMSGToConsole(pack.getFirstPageUrl());
+                        sendDebugMSGToConsole("File will be saved as :" + pack.getTitleFileName() + "\\" + "1." + pack.getTFFileName(2));
                         wc.DownloadFile(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + "1" + "." + pack.getTFFileName(2));
                     }
 
@@ -87,24 +100,24 @@ namespace URLDownloader
                         //Console.Out.WriteLine("From:" + pack.getURLs(num));
                         //Console.Out.WriteLine("File:" + pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) +"."+ pack.getFileName(2, num));
                         DlProgress++;
-                       Console.Out.WriteLine("DlProgress" + DlProgress + "/Total:" + DlTotalPrg + "/Num:" + num);
+                        sendDebugMSGToConsole("DlProgress" + DlProgress + "/Total:" + DlTotalPrg + "/Num:" + num);
                        
 
                         if(pack.getIssupplement())
                         {
+                            sendDebugMSGToConsole("File will be saved as :" + Convert.ToString(num + 1 + SupNum) + "." + pack.getFileName(2, num));
                             wc.DownloadFile(pack.getURLs(num), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num + 1+SupNum) + "." + pack.getFileName(2, num));
-                            Console.Out.WriteLine(pack.getURLs(num));
+                            sendDebugMSGToConsole(pack.getURLs(num));
                         }
                         else
                         {
+                            sendDebugMSGToConsole("File will be saved as :" + Convert.ToString(num + 1) + "." + pack.getFileName(2, num));
                             wc.DownloadFile(pack.getURLs(num), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num + 1) + "." + pack.getFileName(2, num));
-                            Console.Out.WriteLine(pack.getURLs(num));
+                            sendDebugMSGToConsole(pack.getURLs(num));
                         }
 
 
                         
-                        //Console.Out.WriteLine((decimal)DlProgress / (decimal)DlTotalPrg);
-                        //Console.Out.WriteLine("Progress:" + Convert.ToString((100.0*(DlProgress/DlTotalPrg)))); 
                         Thread.Sleep((isLowSpeedToDebug? 5000:1000));
                     }
                     isDlFinished = true;
@@ -116,14 +129,27 @@ namespace URLDownloader
 
                     if (pack.getIssupplement())
                     {
-                        String[] targetDLArray = Directory.GetFiles(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
-                        List<String> targetDyList = targetDLArray.ToList();
-                        targetDyList.Sort();
 
-                        StartNum = Convert.ToInt16(targetDyList[targetDyList.Count - 1])+1;
-                        targetNum = StartNum + Convert.ToInt16(pack.getURLs(0));
+                        String[] targetDLArray = Directory.GetFiles(pack.getPath() + "\\" + pack.getTitleFileName() + "\\");
+                        List<String> targetDyList = new List<string>();
+                        for(int Cnum=0; Cnum<targetDLArray.Length;Cnum++)
+                        {
+                            targetDyList.Add(Path.GetFileName(targetDLArray[Cnum]).Split('.')[0]);
+                        }
+                        
+                        targetDyList.Sort(new CustomNumericComparer());
 
-                        downloadConservalty(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(StartNum) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
+                        //SupNum = Convert.ToInt16(Path.GetFileName(targetDyList[targetDyList.Count - 1]).Split('.')[0]);
+                        SupNum = Convert.ToInt16(targetDyList[targetDyList.Count - 1])+1;
+
+
+                        sendDebugMSGToConsole("Last Numeric Filename :" + SupNum);
+                        StartNum = Convert.ToInt16(pack.getTFFileName(1));
+                        targetNum = Convert.ToInt16(pack.getURLs(0));
+                        sendDebugMSGToConsole("Start Num:"+StartNum+"/ target : "+targetNum);
+
+                        sendDebugMSGToConsole("File will be saved as :" + Convert.ToString(StartNum + SupNum) + "." + pack.getTFFileName(2));
+                        downloadConservalty(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(StartNum+SupNum) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
 
                     }
                     else
@@ -131,6 +157,7 @@ namespace URLDownloader
                         StartNum = Convert.ToInt16(pack.getTFFileName(1));
                         targetNum = Convert.ToInt16(pack.getURLs(0));
 
+                        sendDebugMSGToConsole("File will be saved as :" + Convert.ToString(StartNum) + "." + pack.getTFFileName(2));
                         downloadConservalty(pack.getFirstPageUrl(), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(StartNum) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
                     }
 
@@ -138,6 +165,7 @@ namespace URLDownloader
 
                     //
                     String toFormat="";
+                    sendDebugMSGToConsole("Checking Format...");
                     for(int tar=0;tar<pack.getTFFileName(1).Length;tar++)
                     {
                         toFormat += "0";
@@ -147,13 +175,23 @@ namespace URLDownloader
                     string WebpageURL = pack.getFirstPageUrl().Substring(0, pack.getFirstPageUrl().LastIndexOf('/')+1);
                     for (int num = StartNum + 1; num <= targetNum; num++)
                     {
-
+                        
                         decimal turndNum = Convert.ToDecimal(num);
                         DlProgress++;
-                        Console.Out.WriteLine("DlProgress" + DlProgress + "/Total:" + DlTotalPrg);
-                        Console.Out.WriteLine(WebpageURL + turndNum.ToString(toFormat) + "." + pack.getTFFileName(2));
-                        Console.Out.WriteLine("using Conservalty Download with subline:"+ pack.getTFFileName(2));
-                        downloadConservalty(WebpageURL + turndNum.ToString(toFormat) + "." + pack.getTFFileName(2), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
+                        sendDebugMSGToConsole("DlProgress" + DlProgress + "/Total:" + DlTotalPrg);
+                        sendDebugMSGToConsole(WebpageURL + turndNum.ToString(toFormat) + "." + pack.getTFFileName(2));
+                        sendDebugMSGToConsole("using Conservalty Download with subline:"+ pack.getTFFileName(2));
+                        if(pack.getIssupplement())
+                        {
+                            sendDebugMSGToConsole("File will be saved as :"+ Convert.ToString((num + SupNum)) + "." + pack.getTFFileName(2));
+                            downloadConservalty(WebpageURL + turndNum.ToString(toFormat) + "." + pack.getTFFileName(2), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString((num+SupNum)) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
+                        }
+                        else
+                        {
+                            sendDebugMSGToConsole("File will be saved as :" + Convert.ToString(num) + "." + pack.getTFFileName(2));
+                            downloadConservalty(WebpageURL + turndNum.ToString(toFormat) + "." + pack.getTFFileName(2), pack.getPath() + "\\" + pack.getTitleFileName() + "\\" + Convert.ToString(num) + "." + pack.getTFFileName(2), pack.getTFFileName(2));
+                        }
+                        
                         Thread.Sleep((isLowSpeedToDebug ? 5000 : 1000));
                     }
                     isDlFinished = true;
@@ -169,7 +207,7 @@ namespace URLDownloader
 
             List<string> localPSname = PicSname;
             bool needChangeSubName = false;
-            Console.Out.WriteLine("LocalPSname is Removeable: "+localPSname.Remove(subname));
+            sendDebugMSGToConsole("LocalPSname is Removeable: "+localPSname.Remove(subname));
             string cuttedSubNamesWebAddress = address.Substring(0,address.LastIndexOf('.')+1);
             Int16 retryTimes = 0;
             bool retrySuccessed = false;
@@ -193,7 +231,7 @@ namespace URLDownloader
                 {
                     try
                     {
-                        Console.Out.WriteLine("retring using subname:" + localPSname[retryTimes]);
+                        sendDebugMSGToConsole("retring using subname:" + localPSname[retryTimes]);
                         wc.DownloadFile(cuttedSubNamesWebAddress + localPSname[retryTimes], filename);
                         retrySuccessed = true;
                     }
@@ -245,6 +283,45 @@ namespace URLDownloader
             {
 
 
+            }
+        }
+
+        private void sendDebugMSGToConsole(String args)
+        {
+            Console.Out.WriteLine("[Uddler Kaidan]" + args);
+        }
+
+        public class CustomNumericComparer : IComparer<string>
+        {
+            public int Compare(string s1, string s2)
+            {
+                if (IsNumeric(s1) && IsNumeric(s2))
+                {
+                    if (Convert.ToInt32(s1) > Convert.ToInt32(s2)) return 1;
+                    if (Convert.ToInt32(s1) < Convert.ToInt32(s2)) return -1;
+                    if (Convert.ToInt32(s1) == Convert.ToInt32(s2)) return 0;
+                }
+
+                if (IsNumeric(s1) && !IsNumeric(s2))
+                    return -1;
+
+                if (!IsNumeric(s1) && IsNumeric(s2))
+                    return 1;
+
+                return string.Compare(s1, s2, true);
+            }
+
+            public static bool IsNumeric(object value)
+            {
+                try
+                {
+                    int i = Convert.ToInt32(value.ToString());
+                    return true;
+                }
+                catch (FormatException)
+                {
+                    return false;
+                }
             }
         }
 

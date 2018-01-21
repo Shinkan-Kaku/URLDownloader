@@ -52,7 +52,7 @@ namespace URLDownloader
         }
         public String getURLs(int index)
         {
-            Console.Out.WriteLine("Output limit is "+URLs.Count+" and Current Request :"+index);
+            sendDebugMSGToConsole("Output limit is "+URLs.Count+" and Current Request :"+index);
             return URLs[index];
         }
         public String getTitleFileName()
@@ -77,6 +77,7 @@ namespace URLDownloader
             {
                 Int16 FpageNum = Convert.ToInt16(getTFFileName(1));
                 Int16 LastPageNum = Convert.ToInt16(URLs[0]);
+                sendDebugMSGToConsole(Convert.ToString(LastPageNum));
                 if (FpageNum == 0)
                 {
                     return LastPageNum;
@@ -138,6 +139,11 @@ namespace URLDownloader
                     break;
             }
             return result;
+        }
+
+        private void sendDebugMSGToConsole(String args)
+        {
+            Console.Out.WriteLine("[RqOrder Kaidan]"+args);
         }
 
     }

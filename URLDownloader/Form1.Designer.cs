@@ -134,6 +134,7 @@
             resources.ApplyResources(this.rTBox, "rTBox");
             this.rTBox.Name = "rTBox";
             this.rTBox.ReadOnly = true;
+            this.rTBox.TextChanged += new System.EventHandler(this.rTBox_TextChanged);
             // 
             // panel2
             // 
@@ -230,6 +231,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.rTBox);
             this.Controls.Add(this.panel1);
+            this.ForeColor = System.Drawing.Color.Cornsilk;
             this.Name = "URLSDownloader";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.URLSDownloader_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);

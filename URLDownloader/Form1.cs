@@ -30,7 +30,7 @@ namespace URLDownloader
         bool Reseted = false;
         bool UUStandby = true;
 
-        String versionString = "Version " + "B1.65";
+        String versionString = "Version " + "B1.8";
 
         public URLSDownloader()
         {
@@ -148,7 +148,7 @@ namespace URLDownloader
 
 
                     //updateProgrssHere
-                    Console.Out.WriteLine("2/" + Convert.ToString(Math.Floor(result)));
+                    sendDebugMSGToConsole("2/" + Convert.ToString(Math.Floor(result)));
                     //inteveneUIwithThread("2/" + Convert.ToString(result));
                     Thread.Sleep(1000);
                     if (result <= 100)
@@ -222,7 +222,7 @@ namespace URLDownloader
                     break;
                 default:
                     inteveneUIwithThread("3/ERROR Rising On DownloadRule");
-                    Console.Out.WriteLine("We get Download Rule Value: "+ requestValueFromUI(0));
+                    sendDebugMSGToConsole("We get Download Rule Value: "+ requestValueFromUI(0));
                     break;
             }
 
@@ -234,7 +234,7 @@ namespace URLDownloader
             exam[2] = FBDialog1.SelectedPath;
             RqOrder order;
 
-            Console.Out.WriteLine("BackgroundWorker has Charged");
+            sendDebugMSGToConsole("BackgroundWorker has Charged");
             inteveneUIwithThread("3/BackgroundWorker has Charged");
             switch (Convert.ToInt16(requestValueFromUI(0)))
             {
@@ -243,7 +243,7 @@ namespace URLDownloader
                     order.addURLs(exam[3]);
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(2, true);
-                    Console.Out.WriteLine("Download Request has Send");
+                    sendDebugMSGToConsole("Download Request has Send");
                     Thread.Sleep(5000);
                     break;
                 case 1:
@@ -251,7 +251,7 @@ namespace URLDownloader
                     order.addURLs(exam[3]);
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(2, true);
-                    Console.Out.WriteLine("Download Request has Send");
+                    sendDebugMSGToConsole("Download Request has Send");
                     Thread.Sleep(5000);
                     break;
                 case 2:
@@ -262,7 +262,7 @@ namespace URLDownloader
                     }
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(1, true);
-                    Console.Out.WriteLine("Download Request has Send");
+                    sendDebugMSGToConsole("Download Request has Send");
                     Thread.Sleep(5000);
                     break;
                 case 3:
@@ -273,12 +273,12 @@ namespace URLDownloader
                     }
                     Udler = new UDdler(order);
                     Udler.doDownloadMethod(1, true);
-                    Console.Out.WriteLine("Download Request has Send");
+                    sendDebugMSGToConsole("Download Request has Send");
                     Thread.Sleep(5000);
                     break;
                 default:
                     inteveneUIwithThread("3/ERROR Rising On DownloadRule");
-                    Console.Out.WriteLine("We get Download Rule Value: " + requestValueFromUI(0));
+                    sendDebugMSGToConsole("We get Download Rule Value: " + requestValueFromUI(0));
                     break;
             }
 
@@ -323,6 +323,8 @@ namespace URLDownloader
                             }
                             break;
                         case "FEN_Supplement":
+                            
+                            //sendDebugMSGToConsole(Convert.ToString(DldataView.Rows[0].Cells.Count));
                             if (Regex.IsMatch(Convert.ToString(DldataView.Rows[0].Cells[1].FormattedValue), "^(\\d{1,3})$"))
                             {
                                 inteveneUIwithThread("4/1");
@@ -411,8 +413,8 @@ namespace URLDownloader
                 if (string.IsNullOrEmpty(requestValueFromUI(1)) || string.IsNullOrEmpty(requestValueFromUI(3)))
                 {
                     inteveneUIwithThread("8/0");
-                    Console.Out.WriteLine("ModeCB Or dlRuleCB is Null");
-                    Console.Out.WriteLine("ModeCB:" + requestValueFromUI(1) + "DlRuleCB" + requestValueFromUI(3));
+                    sendDebugMSGToConsole("ModeCB Or dlRuleCB is Null");
+                    sendDebugMSGToConsole("ModeCB:" + requestValueFromUI(1) + "DlRuleCB" + requestValueFromUI(3));
                 }
                 else
                 {
@@ -868,7 +870,7 @@ namespace URLDownloader
             //UIUpdayer = new Thread(updateUI);
             Reseted = true;
 
-            Console.Out.WriteLine("UI has Reseted");
+            sendDebugMSGToConsole("UI has Reseted");
         }
 
         private void URLSDownloader_FormClosed(object sender, FormClosedEventArgs e)
@@ -879,6 +881,20 @@ namespace URLDownloader
             TitleChecker.Abort();
 
             //dlListner.Abort();
+        }
+
+        private void sendDebugMSGToConsole(String args)
+        {
+            Console.Out.WriteLine("[Main]"+ args);
+        }
+
+        private void rTBox_TextChanged(object sender, EventArgs e)
+        {
+            if(rTBox.Visible)
+            {
+                rTBox.SelectionStart = rTBox.Text.Length;
+                rTBox.ScrollToCaret();
+            }
         }
     }
 }

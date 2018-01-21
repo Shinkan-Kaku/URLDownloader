@@ -386,57 +386,24 @@
   <data name="&gt;&gt;rTBox.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <data name="&gt;&gt;DldataView.Name" xml:space="preserve">
-    <value>DldataView</value>
-  </data>
-  <data name="&gt;&gt;DldataView.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;DldataView.Parent" xml:space="preserve">
-    <value>panel2</value>
-  </data>
-  <data name="&gt;&gt;DldataView.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;panel3.Name" xml:space="preserve">
-    <value>panel3</value>
-  </data>
-  <data name="&gt;&gt;panel3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;panel3.Parent" xml:space="preserve">
-    <value>panel2</value>
-  </data>
-  <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>378, 203</value>
-  </data>
-  <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>278, 365</value>
-  </data>
-  <data name="panel2.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
-    <value>panel2</value>
-  </data>
-  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
   <metadata name="Num.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="Num.HeaderText" xml:space="preserve">
+    <value>No.</value>
+  </data>
+  <data name="Num.Width" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
   <metadata name="Url.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="Url.HeaderText" xml:space="preserve">
+    <value>Url</value>
+  </data>
+  <data name="Url.Width" type="System.Int32, mscorlib">
+    <value>200</value>
+  </data>
   <data name="DldataView.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -461,23 +428,20 @@
   <data name="&gt;&gt;DldataView.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="Num.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="Num.HeaderText" xml:space="preserve">
-    <value>No.</value>
+  <data name="BnAddUrlsLog.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="Num.Width" type="System.Int32, mscorlib">
-    <value>50</value>
+  <data name="BnAddUrlsLog.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 3</value>
   </data>
-  <metadata name="Url.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="Url.HeaderText" xml:space="preserve">
-    <value>Url</value>
+  <data name="BnAddUrlsLog.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
   </data>
-  <data name="Url.Width" type="System.Int32, mscorlib">
-    <value>200</value>
+  <data name="BnAddUrlsLog.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="BnAddUrlsLog.Text" xml:space="preserve">
+    <value>add</value>
   </data>
   <data name="&gt;&gt;BnAddUrlsLog.Name" xml:space="preserve">
     <value>BnAddUrlsLog</value>
@@ -512,32 +476,26 @@
   <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="BnAddUrlsLog.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>378, 203</value>
   </data>
-  <data name="BnAddUrlsLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>101, 3</value>
+  <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>278, 365</value>
   </data>
-  <data name="BnAddUrlsLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
+  <data name="panel2.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="BnAddUrlsLog.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
+    <value>panel2</value>
   </data>
-  <data name="BnAddUrlsLog.Text" xml:space="preserve">
-    <value>add</value>
+  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;BnAddUrlsLog.Name" xml:space="preserve">
-    <value>BnAddUrlsLog</value>
+  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
-  <data name="&gt;&gt;BnAddUrlsLog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;BnAddUrlsLog.Parent" xml:space="preserve">
-    <value>panel3</value>
-  </data>
-  <data name="&gt;&gt;BnAddUrlsLog.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 172</value>
