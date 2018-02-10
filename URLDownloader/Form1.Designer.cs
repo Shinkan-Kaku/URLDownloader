@@ -231,7 +231,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.rTBox);
             this.Controls.Add(this.panel1);
-            this.ForeColor = System.Drawing.Color.Cornsilk;
+            this.ForeColor = System.Drawing.Color.Black;
             this.Name = "URLSDownloader";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.URLSDownloader_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
